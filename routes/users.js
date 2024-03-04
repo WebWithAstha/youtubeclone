@@ -1,9 +1,41 @@
-var express = require('express');
-var router = express.Router();
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/youtubeclone')
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const userSchema = mongoose.Schema({
+  username: String,
+  email: String,
+  uploadedVideo:[
+    {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'video'
+    }
+  ],
+  watchedVideo:[
+    {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'video'
+    }
+  ],
+  likedVideo:[
+    {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'video'
+    }
+  ],
+  subscribers:[
+    {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'user'
+    }
+  ],
+  subscribed:[
+    {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'user'
+    }
+  ]
+  
 
-module.exports = router;
+})
+
+module.exports = mongoose.model('user',userSchema)
