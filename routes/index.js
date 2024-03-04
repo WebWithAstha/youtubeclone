@@ -17,9 +17,19 @@ router.get('/results', function(req, res, next) {
 router.get('/shorts', function(req, res, next) {
   res.render('shorts.ejs', { loggedUser: req.user});
 });
-
 router.get('/you', function(req, res, next) {
   res.render('you.ejs', { loggedUser: req.user});
 });
+router.get('/profile', function(req, res, next) {
+  res.render('profile.ejs',{ loggedUser: req.user});
+});
+router.get('/playlist/:some', function(req, res, next) {
+  res.render('playlist.ejs',{ loggedUser: req.user});
+});
+router.get('/studio' ,function(req, res, next) {
+  res.render('studio.ejs',{ loggedUser: req.user});
+});
+
+
 
 module.exports = router;
