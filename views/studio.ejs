@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .profile-part button:hover .menu{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="main h-screen w-full overflow-hidden ">
+        <div class="upload-overlay hidden z-10 absolute h-full w-full flex items-center justify-center bg-[rgba(0,0,0,.7)]">
+            <i onclick="closeOverlay()" class="ri-close-line close absolute font-bold text-3xl text-white absolute top-5 right-10"></i>
+            <div class="upload h-2/3 w-2/3 bg-zinc-100 flex items-center justify-center relative">
+                <form action="/upload" >
+                    <input type="file" hidden name="video" id="videoUpload">
+                    <div class="description flex flex-col gap-4 justify-center items-center h-full w-full">
+                        <i class="ri-upload-2-line text-[2vw] border border-2 border-black rounded-full w-[5vw] flex items-center justify-center aspect-square"></i>
+                        <h1 class="selectFile cursor-pointer font-medium text-xl bg-blue-500 px-4 py-2 rounded text-white">Select a file</h1>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+        <nav class="w-full h-[9vh] border-b flex  items-center justify-between px-7 shadow-md">
+            <div class="logo flex shrink-0 gap-6 h-full items-center">
+                <i class="ri-menu-line text-lg text-zinc-500"></i>
+                <img src="https://www.gstatic.com/youtube/img/creator/yt_studio_logo.svg" class="h-[36%] shrink-0" alt="">
+            </div>
+            <div class="search w-[41%] border border-zinc-300 rounded-md overflow-hidden relative ml-2">
+                <i class="ri-search-line absolute text-zinc-400 left-2 top-1/2 -translate-y-1/2"></i>
+                <input type="text" class="w-full pl-8 px-5 py-2 text-sm  outline-none " placeholder="Search across your channel">
+            </div>
+            <div class="profile-part flex gap-5 items-center pl-3 relative">
+                <i class="ri-question-line text-2xl text-zinc-600 font-thin"></i>
+                <button class="px-2.5 py-1 border border-zinc-300 flex items-center"><i class="ri-video-upload-line text-red-500 mr-2 text-xl"></i>CREATE
+                    <div class="menu absolute top-full w-fit right-[24%] hidden  bg-white border">
+                        <h1 class="py-1 px-3 text-start hover:bg-zinc-100" onclick="openOverlay()"><i class="ri-upload-line mr-3 text-zinc-400"></i>Upload a video</h1>
+                        <h1 class="py-1 px-3 text-start hover:bg-zinc-100" onclick="openOverlay()"><i class="ri-rfid-line mr-3 text-zinc-400"></i>Go live</h1>
+                    </div>
+                </button>
+                
+                <div class="profileImg h-[2.1vw] rounded-full overflow-hidden aspect-square">
+                    <img class="h-full w-full object-cover" src="https://yt3.googleusercontent.com/ytc/AIdro_nLL25fDR5-cdL6TtITu9iVZxSvmIXk6buqstMq-aQ=s176-c-k-c0x00ffffff-no-rj" alt="">
+                </div>
+            </div>
+        </nav>
+        <div class="bottom h-[91vh]  flex w-full">
+            <div class="left border-r w-[17vw] flex flex-col items-center py-6">
+                <div class="profileImg h-[7.3vw] mb-4 rounded-full overflow-hidden aspect-square">
+                    <img class="h-full w-full object-cover" src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj" alt="">
+                </div>
+                <h1 class="text-sm font-medium">Your Channel</h1>
+                <h1 class="text-sm font-medium text-zinc-600">Astha Lodhi</h1>
+                <div class="channel-opt w-full h-[45vh] mt-6 overflow-y-auto border">
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2 "><i class="ri-dashboard-fill mr-4 text-2xl"></i>Dashboard</h1>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2 "><i class="ri-video-line mr-4 text-2xl"></i>Content</h1>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2 "><i class="ri-bar-chart-box-line mr-4 text-2xl"></i>Analytics</h1>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2 "><i class="ri-message-2-line mr-4 text-2xl"></i>Comment</h1>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2 "><i class="ri-copyright-line mr-4 text-2xl"></i>Copyright </h1>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2 "><i class="ri-money-dollar-circle-line mr-4 text-2xl"></i>Earn</h1>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2 "><i class="ri-list-view mr-4 text-2xl"></i>Subtitles</h1>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2 "><i class="ri-edit-line mr-4 text-2xl"></i>Customization</h1>
+                </div>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2  w-full"><i class="ri-settings-3-line mr-4 text-2xl"></i>Settings</h1>
+                    <h1 class="font-medium flex text-sm items-center px-5 py-2  w-full"><i class="ri-feedback-line mr-4 text-2xl"></i>Send feedback</h1>
+            </div>
+            <div class="right w-[83vw] ">
+                <h1 class="text-2xl font-medium p-5">Channel content</h1>
+                <div class="caetogary px-5 border-b border-b-zinc-200 w-full mt-5 flex gap-5 items-center">
+                    <h1 class="font-semibold text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Home</h1>
+                    <h1 class="font-semibold text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Videos</h1>
+                    <h1 class="font-semibold text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Playlist</h1>
+                </div>
+                <div class="filter">
+                    <h1 class="py-2 flex items-center  border-b px-5"><i class="ri-filter-3-line text-2xl text-zinc-400 mr-5"></i> Filter</h1>
+                    <div class="filterdVideo px-5">
+                        <div class="video border-b py-3 flex justify-between">
+                            <h1>1</h1>
+                            <div class="video-desc flex gap-5">
+                                <video src="" class="h-[12vh] w-[10vw] rounded-2xl bg-red-500"></video>
+                                <div class="description w-[13vw]">
+                                    <h1 class="font-medium ">Video name </h1>
+                                    <p class="text-sm text-zinc-400">description </p>
+                                </div>
+                            </div>
+                            <h1>31 mar 2020</h1>
+                            <h1>10 likes</h1>
+                            <h1>10 comments</h1>
+                        </div>
+                        <div class="video border-b py-3 flex justify-between">
+                            <h1>1</h1>
+                            <div class="video-desc flex gap-5">
+                                <video src="" class="h-[12vh] w-[10vw] rounded-2xl bg-red-500"></video>
+                                <div class="description w-[13vw]">
+                                    <h1 class="font-medium ">Video name </h1>
+                                    <p class="text-sm text-zinc-400">description </p>
+                                </div>
+                            </div>
+                            <h1>31 mar 2020</h1>
+                            <h1>10 likes</h1>
+                            <h1>10 comments</h1>
+                        </div>
+                        <div class="video border-b py-3 flex justify-between">
+                            <h1>1</h1>
+                            <div class="video-desc flex gap-5">
+                                <video src="" class="h-[12vh] w-[10vw] rounded-2xl bg-red-500"></video>
+                                <div class="description w-[13vw]">
+                                    <h1 class="font-medium ">Video name </h1>
+                                    <p class="text-sm text-zinc-400">description </p>
+                                </div>
+                            </div>
+                            <h1>31 mar 2020</h1>
+                            <h1>10 likes</h1>
+                            <h1>10 comments</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function closeOverlay(){
+            document.querySelector('.upload-overlay').style.display ="none"
+        }
+        function openOverlay(){
+            document.querySelector('.upload-overlay').style.display ="flex"
+        }
+        document.querySelector('.upload-overlay .selectFile').addEventListener("click", function(){
+            document.querySelector('.upload-overlay input').click();
+        })
+        function goToDescription(){
+            document.querySelector('#videoUpload').addEventListener("change", function(){
+
+
+
+
+
+
+
+
+
+            document.querySelector('form .description').innerHTML = `
+            <i class="ri-arrow-left-line text-2xl font-semibold absolute top-5 left-5" onclick="goBack()"></i>
+            <h1 class="font-medium text-lg text-start w-full">Give the description for the video..</h1>
+            <textarea name="" id="" class="border  h-[15vh] w-[30vw] bg-transparent border-zinc-500 p-2 outline-none" required placeholder="Give the description..."></textarea>
+            <button type="submit" class="rounded px-3 py-1.5 bg-blue-500 text-white font-medium absolute bottom-5 right-5">Upload</button>
+            `;
+            document.querySelector('textarea').focus();
+            console.log()
+            const video = document.createElement('video');
+            video.onloadedmetadata = function() {
+                        console.log(video.duration,video);
+                };
+
+            video.src = URL.createObjectURL(this.files[0]);
+
+        })
+        }
+        function goBack(){
+            document.querySelector('form').innerHTML = `<input type="file" hidden name="video" id="videoUpload">
+                    <div class="description flex flex-col gap-4 justify-center items-center h-full w-full">
+                        <i class="ri-upload-2-line text-[2vw] border border-2 border-black rounded-full w-[5vw] flex items-center justify-center aspect-square"></i>
+                        <h1 class="selectFile cursor-pointer font-medium text-xl bg-blue-500 px-4 py-2 rounded text-white">Select a file</h1>
+                    </div>`
+            document.querySelector('.upload-overlay .selectFile').addEventListener("click", function(){
+            document.querySelector('.upload-overlay input').click();
+            goToDescription();
+        })
+        }
+        goToDescription();
+
+    </script>
+    
+</body>
+</html>
