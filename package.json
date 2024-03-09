@@ -6,12 +6,20 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "connect-mongo": "^5.1.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "express-session": "^1.18.0",
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.2",
     "http-errors": "~1.6.3",
     "mongoose": "^8.2.0",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "multer": "^1.4.5-lts.1",
+    "passport": "^0.7.0",
+    "passport-google-oidc": "^0.1.0"
   }
 }

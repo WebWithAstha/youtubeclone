@@ -1,0 +1,42 @@
+<%include ./partials/header%>
+<div class="left w-2/3 bg-gray-300 pl-24 pr-6 pt-6">
+    <div onclick="addPlayIcon(this)" class="video-container flex items-center justify-center w-full bg-zinc-900 aspect-video overflow-hidden rounded-2xl">
+        <video class="h-full" autoplay="true" controls onclick="togglePlay(this)" onmouseenter="toggleControls(this)" onmouseleave="toggleControls(this)" src="/uploads/videos/<%=video.videoName%>"></video>
+    </div>
+</div>
+<div class="right w-1/3 bg-gray-400"></div>
+
+<script>
+    
+    document.querySelector('video').play()
+    
+    function toggleControls(elem){
+        return ;
+        if(!elem.paused){
+            if(elem.hasAttribute('controls')){
+                elem.removeAttribute('controls');
+            }else{
+                elem.setAttribute('controls', '');
+            }
+        }
+    }
+
+    function togglePlay(elem){ 
+    }
+
+    function addPlayIcon(container) {
+    const iconElement = document.createElement('i');
+    if(container.querySelector('video').paused){
+        iconElement.classList.add('ri-pause-fill');
+    }else{
+        iconElement.classList.add('ri-play-fill');
+    }
+    iconElement.classList.add('icon', 'absolute', 'pointer-events-none', 'aspect-square', 'text-white', 'text-5xl', 'rounded-full', 'items-center', 'p-4', 'bg-[rgba(1,1,1,.5)]');
+    container.appendChild(iconElement);
+    setTimeout(function() {
+        container.removeChild(iconElement);
+    }, 1000);
+}
+
+</script>
+<%include ./partials/footer%>

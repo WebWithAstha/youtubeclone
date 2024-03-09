@@ -3,39 +3,46 @@ mongoose.connect('mongodb://127.0.0.1:27017/youtubeclone')
 
 const userSchema = mongoose.Schema({
   username: String,
+  profileImg: String,
+  channelBg: String,
   email: String,
-  uploadedVideo:[
+  channelname: String,
+  createdDate: {
+    type: Date,
+    default: Date.now
+  },
+  uploadedVideo: [
     {
-      type:mongoose.Schema.Types.ObjectId,
-      ref:'video'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'video'
     }
   ],
-  watchedVideo:[
+  watchedVideo: [
     {
-      type:mongoose.Schema.Types.ObjectId,
-      ref:'video'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'video'
     }
   ],
-  likedVideo:[
+  likedVideo: [
     {
-      type:mongoose.Schema.Types.ObjectId,
-      ref:'video'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'video'
     }
   ],
-  subscribers:[
+  subscribers: [
     {
-      type:mongoose.Schema.Types.ObjectId,
-      ref:'user'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
     }
   ],
-  subscribed:[
+  subscribed: [
     {
-      type:mongoose.Schema.Types.ObjectId,
-      ref:'user'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
     }
   ]
-  
+
 
 })
 
-module.exports = mongoose.model('user',userSchema)
+module.exports = mongoose.model('user', userSchema)

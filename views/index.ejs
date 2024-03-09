@@ -1,5 +1,5 @@
 <%include ./partials/header%>
-    <div class="right h-full flex-1 relative px-6">
+    <div class="right w-full h-full relative px-6 flex flex-wrap">
         <div class="tags relative flex px-6 py-3 gap-3 items-center overflow-x-auto">
             <i
                 class="ri-arrow-left-s-line bg-zinc-100 rounded-full h-[5%] top-[8.6%] flex items-center justify-center aspect-square fixed left-60"></i>
@@ -31,77 +31,61 @@
             <h2 class="cursor-pointer hover:bg-zinc-100 bg-zinc-200 px-3 py-1 rounded-md font-medium shrink-0">Jai Shree
                 Ram</h2>
         </div>
-        <div class="videos flex py-5 flex-wrap gap-4 overflow-y-auto h-[85vh] ">
+        <div style="display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(20rem,1fr));
+        max-width:100%;
+        " class="videos shrink-0 py-5 gap-4 overflow-y-auto h-[85vh] ">
+            <%shuffledVideos.forEach(function(video){%>
+                <a href="/video/<%=video._id%>" onmouseenter="videoMouseEnterHandle(this)"
+                    onmouseleave="videoMouseLeaveHandle(this)">
 
-            <div class="video w-[25rem] mb-1">
-                <div class="cursor-pointer rounded-xl h-56 bg-zinc-200 mb-2 relative overflow-hidden">
-                    <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl hover:hidden">
-                        <!-- <img src="https://jw-webmagazine.com/wp-content/uploads/2020/08/Anime-Demon-Slayer-Kimetsu-no-Yaiba.png" class="w-full h-full object-cover" alt=""> -->
+                    <div class="video mb-1">
+                        <div onmouseenter="videoMouseEnterHandle(this)" onmouseleave="videoMouseLeaveHandle(this)"
+                            class="cursor-pointer flex justify-center w-full rounded-xl h-56 bg-zinc-900 mb-2 relative overflow-hidden">
+                            <video class="h-full" ontimeupdate="pauseVideo(this)" muted src="/uploads/videos/<%=video.videoName%>"></video>
+                            <%if(video.thumbnail){%>
+                                <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
+                                    <img src="/uploads/images/<%=video.thumbnail%>" class="w-full h-full object-cover" alt="">
+                                </div>
+                                <%}%>
+                        </div>
+                        <h2 class="leading-tight">
+                            <%=video.title%>
+                        </h2>
+                        <h4 class="text-zinc-500 text-sm">channel name</h4>
+                        <div class="flex gap-1 items-center text-zinc-500">
+                            <h4 class="text-sm">
+                                <%=video.likes%> views
+                            </h4>
+                            <i class="ri-circle-fill text-[4px]"></i>
+                            <h4 class="text-sm">23 hours ago</h4>
+                        </div>
                     </div>
-                </div>
-                <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.</h2>
-                <h4 class="text-zinc-500 text-sm">channel name</h4>
-                <div class="flex gap-1 items-center text-zinc-500">
-                    <h4 class="text-sm">15 views</h4>
-                    <i class="ri-circle-fill text-[4px]"></i>
-                    <h4 class="text-sm">23 hours ago</h4>
-                </div>
-            </div>
-            <div class="w-[25vw] mb-1 playlist relative">
-                <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
-                <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 "></div>
-                
-                <div class="cursor-pointer rounded-xl h-56 bg-zinc-200 mb-2 relative overflow-hidden">
-                    <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl hover:hidden">
-                        <!-- <img src="https://jw-webmagazine.com/wp-content/uploads/2020/08/Anime-Demon-Slayer-Kimetsu-no-Yaiba.png" class="w-full h-full object-cover" alt=""> -->
-                    </div>
-                </div>
+                </a>
+                <%})%>
+                    <div class="max-w-[25rem] mb-1 playlist relative">
+                        <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 ">
+                        </div>
+                        <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 ">
+                        </div>
 
-                <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.</h2>
-                <h4 class="text-zinc-500 text-sm">channel name</h4>
-                <div class="flex gap-1 items-center text-zinc-500">
-                    <h4 class="text-sm">15 views</h4>
-                    <i class="ri-circle-fill text-[4px]"></i>
-                    <h4 class="text-sm">23 hours ago</h4>
-                </div>
-            </div>
-            <div class="video w-[25rem] mb-1">
-                <div class="cursor-pointer rounded-xl h-56 bg-zinc-200 mb-2 relative overflow-hidden">
-                    <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl hover:hidden">
-                        <!-- <img src="https://jw-webmagazine.com/wp-content/uploads/2020/08/Anime-Demon-Slayer-Kimetsu-no-Yaiba.png" class="w-full h-full object-cover" alt=""> -->
-                    </div>
-                </div>
-                <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.</h2>
-                <h4 class="text-zinc-500 text-sm">channel name</h4>
-                <div class="flex gap-1 items-center text-zinc-500">
-                    <h4 class="text-sm">15 views</h4>
-                    <i class="ri-circle-fill text-[4px]"></i>
-                    <h4 class="text-sm">23 hours ago</h4>
-                </div>
-            </div>
-            <div class="w-[25vw] mb-1 playlist relative">
-                <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
-                <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 "></div>
-                
-                <div class="cursor-pointer rounded-xl h-56 bg-zinc-200 mb-2 relative overflow-hidden">
-                    <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl hover:hidden">
-                        <!-- <img src="https://jw-webmagazine.com/wp-content/uploads/2020/08/Anime-Demon-Slayer-Kimetsu-no-Yaiba.png" class="w-full h-full object-cover" alt=""> -->
-                    </div>
-                </div>
+                        <div class="cursor-pointer rounded-xl h-56 bg-zinc-200 mb-2 relative overflow-hidden">
+                            <div
+                                class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl hover:hidden">
+                                <!-- <img src="https://jw-webmagazine.com/wp-content/uploads/2020/08/Anime-Demon-Slayer-Kimetsu-no-Yaiba.png" class="w-full h-full object-cover" alt=""> -->
+                            </div>
+                        </div>
 
-                <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.</h2>
-                <h4 class="text-zinc-500 text-sm">channel name</h4>
-                <div class="flex gap-1 items-center text-zinc-500">
-                    <h4 class="text-sm">15 views</h4>
-                    <i class="ri-circle-fill text-[4px]"></i>
-                    <h4 class="text-sm">23 hours ago</h4>
-                </div>
-            </div>
-           
+                        <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
+                            consectetur adipisicing elit.</h2>
+                        <h4 class="text-zinc-500 text-sm">channel name</h4>
+                        <div class="flex gap-1 items-center text-zinc-500">
+                            <h4 class="text-sm">15 views</h4>
+                            <i class="ri-circle-fill text-[4px]"></i>
+                            <h4 class="text-sm">23 hours ago</h4>
+                        </div>
+                    </div>
+
 
 
 
@@ -110,5 +94,7 @@
         </div>
 
     </div>
+
+    
 
     <%include ./partials/footer%>
