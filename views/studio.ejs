@@ -43,10 +43,10 @@
                         <h2 class="sm:block hidden text-md uppercase">Create</h2>
                     </div>
                     <div class="menu absolute top-full w-fit right-[24%] hidden  bg-white border">
-                        <h1 onclick="createAndShowUploadMediaForm('video')"
+                        <h1 onclick="showUploadMediaBox('video')"
                             class="py-1 px-3 text-start hover:bg-zinc-100"><i
                                 class="ri-upload-line mr-3 text-zinc-400"></i>Upload a video</h1>
-                        <h1 onclick="createAndShowUploadMediaForm('short')"
+                        <h1 onclick="showUploadMediaBox('short')"
                             class="py-1 px-3 text-start hover:bg-zinc-100"><i
                                 class="ri-upload-line mr-3 text-zinc-400"></i>Upload a short</h1>
                         <h1 onclick="showCreatePlayistForm()" class="py-1 px-3 text-start hover:bg-zinc-100"><i
@@ -153,8 +153,8 @@
                                 <div class="video-desc flex gap-5">
                                     <div onmouseenter="videoMouseEnterHandle(this)"
                                         onmouseleave="videoMouseLeaveHandle(this)"
-                                        class="cursor-pointer flex justify-center w-40 aspect-video rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
-                                        <video class="h-full" ontimeupdate="pauseVideo(this)" muted src="/uploads/videos/<%=video.videoName%>"></video>
+                                        class="cursor-pointer flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
+                                        <video class="h-full" ontimeupdate="pauseVideo(this)" muted preload="metadata" controlsList="nodownload" src="/uploads/videos/<%=video.videoName%>"></video>
                                         <%if(video.thumbnail){%>
                                             <div
                                                 class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
@@ -173,7 +173,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <h1>31 mar 2020</h1>
+                                <h1><%= new Date(video.uploadDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }) %></h1>
                                 <h1>
                                     <%=video.likes.length%> likes
                                 </h1>
@@ -232,7 +232,7 @@
             dynamicForm.setAttribute('method', 'post')
         }
 
-        function createAndShowUploadMediaForm(uploadType) {
+        function showUploadMediaBox(uploadType) {
             dynamicForm = document.createElement('form')
             dynamicForm.className = "upload-pannel sm:h-2/3 h-4/5 sm:w-[50rem] w-full bg-white flex items-center justify-center relative"
             dynamicForm.innerHTML = `
@@ -326,6 +326,7 @@
 
         function uploadVideoFile(uploadType) {
             const file = document.querySelector('#videoFileInput').files[0]
+            const videoUrl = URL.createObjectURL(file)
             let formData = new FormData();
             formData.append('video', file);
             formData.append('type', `${uploadType}`);
@@ -364,7 +365,7 @@
                             </div>
 
                             <h2 class="text-md font-medium mt-7">Thumbnail</h2>
-                            <input onchange="thumbnailInputChangeHandle(this,'${response._id}')" type="file" hidden name="thumbnail" id="thumbnailFileInput">
+                            <input onchange="thumbnailInputChangeHandle(this,'${response._id}')" type="file" accept="image/*" hidden name="thumbnail" id="thumbnailFileInput">
                             <div onclick="selectThumbnailFile()" class="thumbnail rounded-t-md max-w-80 aspect-video bg-zinc-400">
                                 <img src="/uploads/images/add.jpg" class="w-full object-cover h-full" alt="">
                             </div>
@@ -384,7 +385,7 @@
                         </div>
                         <div class="video-pannel sm:w-1/3 md:py-10 sm:flex-col flex">
                             <div class="video sm:rounded-t-md rounded-l-md max-w-80 min-w-52 aspect-video h-max">
-                                <video src="/uploads/videos/${response.videoName}" class="w-full"></video>
+                                <video preload="metadata" controlsList="nodownload" autoplay src="${videoUrl}" class="w-full"></video>
                             </div>
                             <div class="about p-4 bg-zinc-200 max-w-80 sm:min-w-52">
                                 <h4 class="text-sm leading-tight text-zinc-500">Video link</h4>

@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
   profileImg: String,
   channelBg: String,
   email: String,
-  channelname: String,
+  channel:String,
   createdDate: {
     type: Date,
     default: Date.now
@@ -18,6 +18,12 @@ const userSchema = mongoose.Schema({
     }
   ],
   watchedVideo: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'video'
+    }
+  ],
+  watchLater: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'video'
@@ -35,7 +41,7 @@ const userSchema = mongoose.Schema({
       ref: 'user'
     }
   ],
-  subscribed: [
+  subscriptions: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user'

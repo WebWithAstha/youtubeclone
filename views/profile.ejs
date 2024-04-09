@@ -5,8 +5,8 @@
                 <img class="h-full w-full object-cover" src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj" alt="">
             </div>
             <div class="details">
-                <h1 class="text-4xl font-bold mb-2">Astha Lodhi</h1>
-                <p class="text-sm text-zinc-700 font-medium mb-2">@asthlodhi12a94</p>
+                <h1 class="text-4xl font-bold mb-2"><%=user.username%></h1>
+                <p class="text-sm text-zinc-700 font-medium mb-2"><%=user.channel%></p>
                 <p class="text-sm text-zinc-700 font-medium mb-4">More about this channel <i class="ri-arrow-right-s-line"></i></p>
                 <button class="px-4 py-1.5 text-sm mr-2 captiliaze font-medium bg-zinc-200 rounded-3xl">Customise channel</button>
                 <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage videos</button>
@@ -21,6 +21,20 @@
             <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3" type="text">
         </div>
         <div class="videos px-20 flex flex-wrap gap-5 overflow-y-auto h-[85vh] py-2">
+            <%user.uploadedVideo.forEach(video=>{%>
+
+                <div class="w-[26vw] mb-1 video">
+                    <div class="rounded-xl h-56 bg-zinc-200 mb-2">
+                    </div>
+                    <h2 class="leading-tight"><%=video.title%></h2>
+                    <h4 class="text-zinc-500 text-sm"><%=user.channel%></h4>
+                    <div class="flex gap-1 items-center text-zinc-500">
+                        <h4 class="text-sm"><%=video.views.length%> views</h4>
+                        <i class="ri-circle-fill text-[4px]"></i>
+                        <h4 class="text-sm">23 hours ago</h4>
+                    </div>
+                </div>
+            <%})%>
             <div class="w-[26vw] mb-1 playlist relative">
                 <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
                 <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 "></div>
@@ -36,18 +50,7 @@
                     <h4 class="text-sm">23 hours ago</h4>
                 </div>
             </div>
-            <div class="w-[26vw] mb-1 video">
-                <div class="rounded-xl h-56 bg-zinc-200 mb-2">
-                </div>
-                <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.</h2>
-                <h4 class="text-zinc-500 text-sm">channel name</h4>
-                <div class="flex gap-1 items-center text-zinc-500">
-                    <h4 class="text-sm">15 views</h4>
-                    <i class="ri-circle-fill text-[4px]"></i>
-                    <h4 class="text-sm">23 hours ago</h4>
-                </div>
-            </div>
+           
 
 
         </div>

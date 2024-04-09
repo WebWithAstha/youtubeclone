@@ -91,13 +91,13 @@
                             <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
                             <span class="text-sm font-medium">Sign in</span>
                         </button></a>
-                        <%}%>
+                    <%}%>
 
             </div>
 
         </div>
-        <div class="bottom w-full h-[91vh] flex">
-            <%if(leftSection){%>
+        <div class="bottom w-full h-[91vh] flex relative">
+            <%if(leftSection ){%>
             <div class="left h-full overflow-y-auto md:w-60 w-10 shrink-0 py-1 border-b-1">
                 <div class="border-b-[1px] px-3 py-2">
                     <a href="/">
@@ -251,3 +251,21 @@
 
             </div>
             <%}%>
+            <div class="bottom-nav z-10 flex w-full fixed bottom-0 left-0 h-[8vh] justify-between items-center bg-white">
+                <i class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+                <i class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+                <i class="ri-add-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+                <i class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+                <i class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+
+            </div>
+
+            <script>
+                let width = document.querySelector('body').getBoundingClientRect().width
+                console.log(width)
+                if(width<'768'){
+                    document.querySelector('.left').style.display="none"
+                }else{
+                    document.querySelector('.bottom-nav').style.display="none"
+                }
+            </script>

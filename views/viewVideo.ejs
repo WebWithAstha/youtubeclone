@@ -1,42 +1,453 @@
 <%include ./partials/header%>
-<div class="left w-2/3 bg-gray-300 pl-24 pr-6 pt-6">
-    <div onclick="addPlayIcon(this)" class="video-container flex items-center justify-center w-full bg-zinc-900 aspect-video overflow-hidden rounded-2xl">
-        <video class="h-full" autoplay="true" controls onclick="togglePlay(this)" onmouseenter="toggleControls(this)" onmouseleave="toggleControls(this)" src="/uploads/videos/<%=video.videoName%>"></video>
+  <link rel="stylesheet" href="/stylesheets/player.css">
+
+
+  <div class="left md:w-2/3 md:pl-24 md:pr-6 md:pt-6">
+    <div onclick="addPlayIcon(this)"
+      class="video-container flex items-center justify-center w-full bg-zinc-900 aspect-video overflow-hidden md:rounded-2xl">
+      <div class="video-controls-container">
+        <div class="timeline-container">
+          <div class="timeline">
+            <div class="thumb-indicator"></div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="play-pause-btn">
+            <svg class="play-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+            </svg>
+            <svg class="pause-icon" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+            </svg>
+          </button>
+          <div class="volume-container">
+            <button class="mute-btn">
+              <svg class="volume-high-icon" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+              </svg>
+              <svg class="volume-low-icon" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z" />
+              </svg>
+              <svg class="volume-muted-icon" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12,4L9.91,6.09L12,8.18M4.27,3L3,4.27L7.73,9H3V15H7L12,20V13.27L16.25,17.53C15.58,18.04 14.83,18.46 14,18.7V20.77C15.38,20.45 16.63,19.82 17.68,18.96L19.73,21L21,19.73L12,10.73M19,12C19,12.94 18.8,13.82 18.46,14.64L19.97,16.15C20.62,14.91 21,13.5 21,12C21,7.72 18,4.14 14,3.23V5.29C16.89,6.15 19,8.83 19,12M16.5,12C16.5,10.23 15.5,8.71 14,7.97V10.18L16.45,12.63C16.5,12.43 16.5,12.21 16.5,12Z" />
+              </svg>
+            </button>
+            <input class="volume-slider" type="range" min="0" max="1" step="any" value="1">
+          </div>
+          <div class="duration-container">
+            <div class="current-time">0:00</div>
+            /
+            <div class="total-time"></div>
+          </div>
+
+          <button class="speed-btn wide-btn">
+            1x
+          </button>
+          <button class="mini-player-btn">
+            <svg viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zm-10-7h9v6h-9z" />
+            </svg>
+          </button>
+
+          <button class="full-screen-btn">
+            <svg class="open" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+            </svg>
+            <svg class="close" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <video class="h-full" autoplay="true" controlsList="nodownload" onclick="togglePlay(this)"
+        src="<%=videoUrl%>"></video>
     </div>
-</div>
-<div class="right w-1/3 bg-gray-400"></div>
+    <div class="video-details overflow-y-auto w-full flex flex-col gap-4 py-2">
+      <h1 class=" text-xl">
+        <%=video.title%>
+      </h1>
+      <div class="flex items-center justify-between ">
+        <div class="profile flex items-center gap-3">
+          <a href="/channel/<%=video.user._id%>">
+            <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+          </a>
+          <div class="channel">
+            <a href="/channel/<%=video.user._id%>">
+              <h3 class="text-md font-medium leading-tight">
+                <%=video.user.username%>
+              </h3>
+            </a>
 
-<script>
-    
+            <h3 class="text-[.8rem] text-zinc-500 leading-tight">
+              <%=video.user.subscribers.length%> subscribers
+            </h3>
+          </div>
+          <%if(!video.user._id.equals(loggedUser._id)){%>
+            <%if(video.user.subscribers.includes(loggedUser._id)){%>
+              <button onclick="toggleSubcribe(this,'<%=video.user._id%>')"
+                class="bg-zinc-200 hover:bg-zinc-300 px-4 py-1.5 rounded-full text-sm flex items-center gap-1 ml-2 overflow-hidden w-max"><i
+                  class="ri-notification-3-fill mr-1"></i>Subscribed</button>
+              <%}else{%>
+                <button onclick="toggleSubcribe(this,'<%=video.user._id%>')"
+                  class="bg-zinc-900 text-white hover:bg-zinc-600 px-4 py-1.5 rounded-full text-sm ml-2 overflow-hidden">Subscribe</button>
+                <%}%>
+                  <%}%>
+
+        </div>
+        <div class="video-actions flex gap-5">
+          <div class="flex rounded-full overflow-hidden text-sm">
+            <button id="like-video-btn" onclick="toggleLike(this,'<%=video._id%>')"
+              class=" bg-zinc-200 hover:bg-zinc-300 pr-2 py-1.5 pl-4">
+              <i class="<%= video.likes.includes(loggedUser._id) ?'ri-thumb-up-fill': 'ri-thumb-up-line'%> pr-1.5"></i>
+              <span>
+                <%=video.likes.length%>
+              </span>
+            </button>
+            <button id="dislike-video-btn" onclick="toggleDislike(this,'<%=video._id%>')"
+              class="bg-zinc-200 hover:bg-zinc-300 pl-2 py-1.5 pr-4">
+              <i class="<%=video.dislikes.includes(loggedUser._id) ?'ri-thumb-down-fill' : 'ri-thumb-down-line'%>"></i>
+            </button>
+          </div>
+
+          <button onclick="toggleWatchLater(this,'<%=video._id%>')"
+            class="bg-zinc-200 hover:bg-zinc-300 px-4 py-1.5 rounded-full text-sm">
+            <i class="<%=loggedUser.watchLater.includes(video._id) ? 'ri-check-line' : 'ri-time-line'%>"></i>
+            Watch Later
+          </button>
+
+        </div>
+      </div>
+      <div class="description leading-tight text-sm">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur accusamus repellat doloremque
+          rerum esse omnis quidem. Aperiam rem nisi assumenda maiores. Provident ut cupiditate asperiores
+          praesentium velit libero et sint!</p>
+      </div>
+    </div>
+    <div class="comment-section">
+      <h1><span>1,173</span> Comments</h1>
+      <div class="comment-inp flex mt-4 gap-3">
+        <div class="img w-10 aspect-square shrink-0 h-max bg-gray-500 rounded-full"></div>
+        <div class="w-full">
+          <input type="text" name="" id=""
+            class="w-full px-1 mb-2 border-b border-zinc-700 bg-transparent outline-none">
+          <button onclick="comment(this,'<%=video._id%>')"
+            class="bg-blue-500 rounded-full px-4 py-1 text-white text-sm font-medium block ml-auto">Comment</button>
+        </div>
+      </div>
+      <div class="comments">
+        <%video.comments.forEach(comment=>{%>
+          <div class="comment flex gap-1 mt-5 border-b-2">
+            <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full"></div>
+            <div class="comment-dets w-full">
+              <div class="flex ml-2 gap-1 items-center">
+                <h3 class="font-medium text-md text-zinc-700">
+                  <%=comment.user.channel%>
+                </h3>
+                <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
+              </div>
+              <p class="ml-2 text-sm">
+                <%=comment.comment%>
+              </p>
+              <div class="flex items-center mt-1 gap-1 ml-3">
+                <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
+                <span onclick="showReplyBox(this,'<%=comment._id%>')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
+              </div>
+              <%if(comment.replies.length > 0){%>
+                <div class="replies-wrap">
+                  <button class="mt-2 text-sm px-5 py-1 hover:bg-blue-100 font-semibold text-blue-700 rounded-full"><%=comment.replies.length%> replies</button>
+                  <div class="replies">
+                    <%comment.replies.forEach(comment=>{%>
+                      <div class="comment flex gap-1 mt-5">
+                        <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full"></div>
+                        <div class="comment-dets w-full">
+                          <div class="flex ml-2 gap-1 items-center">
+                            <h3 class="font-medium text-md text-zinc-700">
+                              <%=comment.user.channel%>
+                            </h3>
+                            <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
+                          </div>
+                          <p class="ml-2 text-sm">
+                            <%=comment.comment%>
+                          </p>
+                          <div class="flex items-center mt-1 gap-1 ml-3">
+                            <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
+                            <span onclick="showReplyBox(this,'<%=comment._id%>')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
+                          </div>
+                          <%if(comment.replies.length > 0){%>
+                            <div class="replies-wrap">
+                              <button class="mt-2 text-sm px-5 py-1 hover:bg-blue-100 font-semibold text-blue-700 rounded-full"><%=comment.replies.length%> replies</button>
+                              <div class="replies">
+                                <%comment.replies.forEach(comment=>{%>
+                                  <div class="comment flex gap-1 mt-5">
+                                    <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full"></div>
+                                    <div class="comment-dets w-full">
+                                      <div class="flex ml-2 gap-1 items-center">
+                                        <h3 class="font-medium text-md text-zinc-700">
+                                          <%=comment.user.channel%>
+                                        </h3>
+                                        <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
+                                      </div>
+                                      <p class="ml-2 text-sm">
+                                        <%=comment.comment%>
+                                      </p>
+                                      <div class="flex items-center mt-1 gap-1 ml-3">
+                                        <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
+                                        <span onclick="showReplyBox(this,'<%=comment._id%>')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
+                                      </div>
+                                      <%if(comment.replies.length > 0){%>
+                                        <div class="replies-wrap">
+                                          <button class="mt-2 text-sm px-5 py-1 hover:bg-blue-100 font-semibold text-blue-700 rounded-full"><%=comment.replies.length%> replies</button>
+                                          <div class="replies">
+                        
+                                          </div>
+                                        </div>
+                                        <%}%>
+                                      </div>
+                                    </div>
+                          
+                                    <%})%>
+                              </div>
+                            </div>
+                            <%}%>
+                          </div>
+                        </div>
+              
+                        <%})%>
+                  </div>
+                </div>
+              <%}%>
+            </div>
+          </div>
+
+          <%})%>
+      </div>
+    </div>
+  </div>
+  <div class="right md:w-1/3 mb-[8vh] md:mb-0">
+    <div class="videos mt-6">
+      <div class="video w-full md:mb-1 mb-3 flex md:flex-row flex-col gap-3 h-max">
+        <div
+          class="cursor-pointer shrink-0 md:w-[11vw] aspect-video md:rounded-xl bg-zinc-200 mb-2 relative overflow-hidden">
+          <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl hover:hidden">
+            <!-- <img src="https://jw-webmagazine.com/wp-content/uploads/2020/08/Anime-Demon-Slayer-Kimetsu-no-Yaiba.png" class="w-full h-full object-cover" alt=""> -->
+          </div>
+        </div>
+        <div class="dets md:px-0 px-3 relative flex-1">
+          <i class="md:text-xl ri-more-2-fill absolute top-0 right-2 "></i>
+          <h2 class="leading-tight text-md md:max-w-[18vw] max-w-[90%]">Attitude | Stand-up Comedy by Ravi Gupta
+            Lorem ipsum dolor sit amet
+          </h2>
+          <div class="flex my-1.5 text-zinc-500 flex-col">
+            <h4 class="text-zinc-500 text-sm leading-tight">channel name</h4>
+            <h4 class="text-sm leading-tight">15 views . <span>2 months ago</span></h4>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="/javascripts/player.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
+    integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js'
+    integrity='sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug=='
+    crossorigin='anonymous' referrerpolicy='no-referrer'></script>
+
+  <script>
+    let bottom = document.querySelector('.bottom')
+    bottom.style.overflowY = "auto"
+    window.addEventListener('resize', function () {
+      if (document.querySelector('body').getBoundingClientRect().width < 768) {
+        bottom.style.flexDirection = "column"
+      }
+    })
+
+
     document.querySelector('video').play()
-    
-    function toggleControls(elem){
-        return ;
-        if(!elem.paused){
-            if(elem.hasAttribute('controls')){
-                elem.removeAttribute('controls');
-            }else{
-                elem.setAttribute('controls', '');
-            }
-        }
-    }
 
-    function togglePlay(elem){ 
-    }
+
 
     function addPlayIcon(container) {
-    const iconElement = document.createElement('i');
-    if(container.querySelector('video').paused){
-        iconElement.classList.add('ri-pause-fill');
-    }else{
+      const iconElement = document.createElement('i');
+      if (container.querySelector('video').paused) {
+        iconElement.classList.add('ri-check-fill');
+        container.querySelector('video').play()
+      } else {
         iconElement.classList.add('ri-play-fill');
-    }
-    iconElement.classList.add('icon', 'absolute', 'pointer-events-none', 'aspect-square', 'text-white', 'text-5xl', 'rounded-full', 'items-center', 'p-4', 'bg-[rgba(1,1,1,.5)]');
-    container.appendChild(iconElement);
-    setTimeout(function() {
-        container.removeChild(iconElement);
-    }, 1000);
-}
+        container.querySelector('video').pause()
+      }
+      iconElement.classList.add('icon', 'absolute', 'pointer-events-none', 'aspect-square', 'text-white', 'text-5xl', 'rounded-full', 'items-center', 'p-4', 'bg-[rgba(1,1,1,.5)]');
 
-</script>
-<%include ./partials/footer%>
+      container.appendChild(iconElement);
+      setTimeout(function () {
+        container.removeChild(iconElement);
+      }, 1000);
+    }
+
+    function toggleLike(btn, videoId) {
+      const likeIcon = btn.querySelector('i')
+      const dislikeIcon = document.querySelector('#dislike-video-btn i')
+      if (likeIcon.classList.contains('ri-thumb-up-line') && dislikeIcon.classList.contains('ri-thumb-down-fill')) {
+        dislikeIcon.classList.remove('ri-thumb-down-fill')
+        dislikeIcon.classList.add('ri-thumb-down-line')
+      }
+      likeIcon.classList.toggle('ri-thumb-up-line')
+      likeIcon.classList.toggle('ri-thumb-up-fill')
+      axios.post(`/like/video/${videoId}`)
+        .then(response => {
+          btn.querySelector('span').innerHTML = response.data
+        })
+    }
+
+    function toggleDislike(btn, videoId) {
+      const dislikeIcon = btn.querySelector('i')
+      const likeIcon = document.querySelector('#like-video-btn i')
+      if (dislikeIcon.classList.contains('ri-thumb-down-line') && likeIcon.classList.contains('ri-thumb-up-fill')) {
+        likeIcon.classList.remove('ri-thumb-up-fill')
+        likeIcon.classList.add('ri-thumb-up-line')
+      }
+      dislikeIcon.classList.toggle('ri-thumb-down-fill')
+      dislikeIcon.classList.toggle('ri-thumb-down-line')
+      axios.post(`/dislike/video/${videoId}`)
+        .then(response => {
+          document.querySelector('#like-video-btn span').innerHTML = response.data
+        })
+
+
+    }
+
+    function toggleSubcribe(btn, userId) {
+      axios.post(`/subscribe/user/${userId}`)
+
+      if (btn.textContent === "Subscribe") {
+        gsap.from(btn, {
+          width: 0,
+          opacity: 0,
+          background: "linear-gradient(to right,red,yellow,yellow)"
+        })
+        gsap.to(btn, {
+          background: "#e4e4e7"
+        })
+        btn.className = "bg-zinc-200 hover:bg-zinc-300 px-4 py-1.5 rounded-full text-md flex items-center gap-1 ml-2 overflow-hidden w-max"
+        btn.innerHTML = `<i class="ri-notification-3-fill mr-1"></i>Subscribed</i>`
+        btn.style.backgroundColor = "green"
+        // btn.style.backgroundColor ="#e4e4e7"
+
+      } else {
+        btn.style.backgroundColor = "black"
+        btn.className = "bg-zinc-800 text-white hover:bg-zinc-700 px-4 py-1.5 rounded-full text-md ml-2 overflow-hidden max-w-max"
+        btn.innerHTML = "Subscribe"
+      }
+    }
+
+    function toggleWatchLater(btn, videoId) {
+      btn.querySelector("i").classList.toggle("ri-time-line")
+      btn.querySelector("i").classList.toggle("ri-check-fill")
+      axios.post(`/watchLater/video/${videoId}`)
+    }
+
+    function comment(btn, videoId) {
+      let inp = btn.parentNode.querySelector('input')
+      axios.post(`/comment/video/${videoId}`, {
+        comment: inp.value
+      })
+        .then(comment => {
+          document.querySelector(".comment-section").innerHTML +=
+            `
+      <div class="comment flex gap-1 mt-5">
+          <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+          <div class="comment-dets w-full">
+            <div class="flex ml-2 gap-1 items-center">
+              <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channel%></h3>
+              <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
+            </div>
+            <p class="ml-2 text-sm">${comment.data.comment}</p>
+            <div class="flex items-center mt-1 gap-1 ml-3">
+                <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
+                <span onclick="showReplyBox(this,'${comment.data._id}')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
+              </div>
+              <div class="replies-wrap">
+                  <div class="replies">
+
+                  </div>
+                </div>
+
+          </div>
+        </div>
+      `
+
+        })
+      inp.value = ""
+    }
+
+
+    function showReplyBox(elem,commentId){
+      if(document.querySelector(`#reply${commentId}`))return;
+      let replyBox = document.createElement("div")
+      replyBox.className ='reply-inp flex gap-3'
+      replyBox.id="reply"+commentId
+      replyBox.innerHTML = `
+      <div class="img w-8 aspect-square shrink-0 h-max bg-gray-500 rounded-full"></div>
+                <div class="w-full">
+                  <input type="text" name="" id=""
+                    class="w-full px-1 mb-2 border-b border-zinc-700 bg-transparent outline-none">
+                    <div class="flex w-full justify-end gap-2">
+                  <button onclick="removeReplyBox(this,'${commentId}')"
+                    class="bg-zinc-200 rounded-full px-4 py-1 text-sm font-medium">Cancel</button>
+                  <button onclick="reply(this,'${commentId}')"
+                    class="bg-blue-500 rounded-full px-4 py-1 text-white text-sm font-medium">Reply</button>
+                  </div>
+                </div>
+      `
+            elem.parentNode.insertAdjacentElement('afterend', replyBox);
+
+    }
+    function removeReplyBox(elem, commentId){
+      elem.parentNode.parentNode.parentNode.parentNode.removeChild(document.querySelector(`#reply${commentId}`))
+    }
+    
+
+    function reply(btn,commentId) {
+      let inp = btn.parentNode.parentNode.querySelector('input')
+      if(inp.value==='')return
+      let replies=btn.parentNode.parentNode.parentNode.parentNode.querySelector('.replies')
+      axios.post(`/reply/comment/${commentId}`, {
+        comment: inp.value
+      })
+      .then(reply=>{
+        replies.innerHTML+=`
+        <div class="comment flex gap-1 mt-5">
+          <div class="img w-8 aspect-square h-max bg-gray-500 rounded-full"></div>
+          <div class="comment-dets w-full">
+            <div class="flex ml-2 gap-1 items-center">
+              <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channel%></h3>
+              <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
+            </div>
+            <p class="ml-2 text-sm">${reply.data.comment}</p>
+            <div class="flex items-center mt-1 gap-1 ml-3">
+                <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
+                <span onclick="showReplyBox(this,'${reply.data._id}')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
+              </div>
+          </div>
+        </div>
+        `
+      })
+      removeReplyBox(btn,commentId)
+
+
+      inp.value = ''
+    }
+
+
+
+
+  </script>
+  <%include ./partials/footer%>
