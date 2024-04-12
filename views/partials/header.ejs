@@ -30,7 +30,8 @@
             <div class="flex items-center gap-6">
                 <i class="ri-menu-line"></i>
                 <!-- <div > -->
-                    <a href="/"class="flex items-center gap-1 h-2/5" ><svg xmlns="http://www.w3.org/2000/svg" class="external-icon" viewBox="0 0 90 20" focusable="false"
+                <a href="/" class="flex items-center gap-1 h-2/5"><svg xmlns="http://www.w3.org/2000/svg"
+                        class="external-icon" viewBox="0 0 90 20" focusable="false"
                         style="pointer-events: none; display: block; width: 100%; height: 100%;">
                         <svg viewBox="0 0 90 20" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
                             <g>
@@ -87,185 +88,155 @@
                     <%}else{%>
                         <i class="ri-more-2-line hover:bg-zinc-100 rounded-full py-1.5 px-2.5 min-w-max"></i>
                         <a class="button google" href="/login/federated/google"><button
-                            class="flex items-center hover:bg-blue-100 hover:border-transparent text-blue-600 gap-1.5 border border-zinc-300 px-2.5 rounded-full">
-                            <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
-                            <span class="text-sm font-medium">Sign in</span>
-                        </button></a>
-                    <%}%>
+                                class="flex items-center hover:bg-blue-100 hover:border-transparent text-blue-600 gap-1.5 border border-zinc-300 px-2.5 rounded-full">
+                                <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
+                                <span class="text-sm font-medium">Sign in</span>
+                            </button></a>
+                        <%}%>
 
             </div>
 
         </div>
         <div class="bottom w-full h-[91vh] flex relative">
             <%if(leftSection ){%>
-            <div class="left h-full overflow-y-auto md:w-60 w-10 shrink-0 py-1 border-b-1">
-                <div class="border-b-[1px] px-3 py-2">
-                    <a href="/">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2 bg-zinc-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="30"
-                                viewBox="0 0 24 24" width="24" focusable="false"
-                                style="pointer-events: none; display: block; height: 100%;">
-                                <g>
-                                    <path d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z"></path>
-                                </g>
-                            </svg>
-                            <h2 class="md:block hidden">Home</h2>
-                        </div>
-                    </a>
-                    <a href="/shorts">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"
-                                focusable="false" style="pointer-events: none; display: inline-block;  height: 100%;">
-                                <path
-                                    d="M10 14.65v-5.3L15 12l-5 2.65zm7.77-4.33-1.2-.5L18 9.06c1.84-.96 2.53-3.23 1.56-5.06s-3.24-2.53-5.07-1.56L6 6.94c-1.29.68-2.07 2.04-2 3.49.07 1.42.93 2.67 2.22 3.25.03.01 1.2.5 1.2.5L6 14.93c-1.83.97-2.53 3.24-1.56 5.07.97 1.83 3.24 2.53 5.07 1.56l8.5-4.5c1.29-.68 2.06-2.04 1.99-3.49-.07-1.42-.94-2.68-2.23-3.25zm-.23 5.86-8.5 4.5c-1.34.71-3.01.2-3.72-1.14-.71-1.34-.2-3.01 1.14-3.72l2.04-1.08v-1.21l-.69-.28-1.11-.46c-.99-.41-1.65-1.35-1.7-2.41-.05-1.06.52-2.06 1.46-2.56l8.5-4.5c1.34-.71 3.01-.2 3.72 1.14.71 1.34.2 3.01-1.14 3.72L15.5 9.26v1.21l1.8.74c.99.41 1.65 1.35 1.7 2.41.05 1.06-.52 2.06-1.46 2.56z">
-                                </path>
-                            </svg>
-                            <h2 class="md:block hidden">Shorts</h2>
-                        </div>
-                    </a>
-                    <a href="/subscriptions">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24"
-                                viewBox="0 0 24 24" width="24" focusable="false"
-                                style="pointer-events: none; display: inline-block;  height: 100%;">
-                                <path
-                                    d="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z">
-                                </path>
-                            </svg>
-                            <h2 class="md:block hidden">Subscriptions</h2>
-                        </div>
-                    </a>
-                </div>
-                <%if(loggedUser) {%>
-
-                <div class="border-b-[1px] px-3 py-2">
-                    <a href="/you">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <h2 class="font-semibold text-md">You</h2>
-                            <i class="ri-arrow-right-s-line"></i>
-                        </div>
-                    </a>
-                    <a href="/channel">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <i class="ri-account-box-line text-xl"></i>
-                            <h2 class="md:block hidden">Channel</h2>
-                        </div>
-                    </a>
-                    <a href="/history">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <i class="ri-history-line text-xl"></i>
-                            <h2 class="md:block hidden">History</h2>
-                        </div>
-                    </a>
-                    <a href="/studio">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <i class="ri-video-line text-xl"></i>
-                            <h2 class="md:block hidden">Your Videos</h2>
-                        </div>
-                    </a>
-                    <a href="/playlist/some">
-                        <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                            <i class="ri-time-line text-xl"></i>
-                            <h2 class="md:block hidden">Watch Later</h2>
-                        </div>
-                    </a>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-arrow-down-s-line text-xl"></i>
-                        <h2 class="md:block hidden">Show More</h2>
-                    </div>
-                </div>
-                <div class="border-b-[1px] px-3 py-2">
-                    <div class="flex cursor-pointer items-center rounded-lg gap-6 py-1.5 px-2">
-                        <h2 class="font-semibold text-md">Subscriptions</h2>
-                        <i class="ri-arrow-right-s-line"></i>
-                    </div>
-
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-arrow-down-s-line text-xl"></i>
-                        <h2>Show More</h2>
-                    </div>
-                </div>
-                <%}else{%>
+                <div class="left h-full overflow-y-auto md:w-60 w-10 shrink-0 py-1 border-b-1">
                     <div class="border-b-[1px] px-3 py-2">
-                        
-                        
-                        <a href="/you">
-                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                                <i class="ri-video-line text-xl"></i>
-                                <h2 class="md:block hidden">You</h2>
+                        <a href="/">
+                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2 bg-zinc-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="30"
+                                    viewBox="0 0 24 24" width="24" focusable="false"
+                                    style="pointer-events: none; display: block; height: 100%;">
+                                    <g>
+                                        <path d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z"></path>
+                                    </g>
+                                </svg>
+                                <h2 class="md:block hidden">Home</h2>
                             </div>
                         </a>
-                        <a href="/history">
+                        <a href="/shorts">
                             <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                                <i class="ri-history-line text-xl"></i>
-                                <h2 class="md:block hidden">History</h2>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"
+                                    focusable="false"
+                                    style="pointer-events: none; display: inline-block;  height: 100%;">
+                                    <path
+                                        d="M10 14.65v-5.3L15 12l-5 2.65zm7.77-4.33-1.2-.5L18 9.06c1.84-.96 2.53-3.23 1.56-5.06s-3.24-2.53-5.07-1.56L6 6.94c-1.29.68-2.07 2.04-2 3.49.07 1.42.93 2.67 2.22 3.25.03.01 1.2.5 1.2.5L6 14.93c-1.83.97-2.53 3.24-1.56 5.07.97 1.83 3.24 2.53 5.07 1.56l8.5-4.5c1.29-.68 2.06-2.04 1.99-3.49-.07-1.42-.94-2.68-2.23-3.25zm-.23 5.86-8.5 4.5c-1.34.71-3.01.2-3.72-1.14-.71-1.34-.2-3.01 1.14-3.72l2.04-1.08v-1.21l-.69-.28-1.11-.46c-.99-.41-1.65-1.35-1.7-2.41-.05-1.06.52-2.06 1.46-2.56l8.5-4.5c1.34-.71 3.01-.2 3.72 1.14.71 1.34.2 3.01-1.14 3.72L15.5 9.26v1.21l1.8.74c.99.41 1.65 1.35 1.7 2.41.05 1.06-.52 2.06-1.46 2.56z">
+                                    </path>
+                                </svg>
+                                <h2 class="md:block hidden">Shorts</h2>
+                            </div>
+                        </a>
+                        <a href="/subscriptions">
+                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24"
+                                    viewBox="0 0 24 24" width="24" focusable="false"
+                                    style="pointer-events: none; display: inline-block;  height: 100%;">
+                                    <path
+                                        d="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z">
+                                    </path>
+                                </svg>
+                                <h2 class="md:block hidden">Subscriptions</h2>
                             </div>
                         </a>
                     </div>
-                    <div class="border-b-[1px] px-8 py-4">
-                        <p class="text-sm leading-tight mb-3">Sign in to like videos, comment, and subscribe.</p>
-                        <a class="button google" href="/login/federated/google"><button
-                            class="flex items-center hover:bg-blue-100 hover:border-transparent text-blue-600 gap-1.5 border border-zinc-300 px-2.5 rounded-full">
-                            <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
-                            <span class="text-sm font-medium">Sign in</span>
-                        </button></a>
-                    </div>
+                    <%if(loggedUser) {%>
 
-                    
-                <%}%>
-                <div class="border-b-[1px] px-3 py-2">
-                    <div class="flex items-center rounded-lg gap-6 py-1.5 px-2">
-                        <h2 class="font-semibold text-md">Explore</h2>
-                        <i class="ri-arrow-right-s-line"></i>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-fire-line text-xl"></i>
-                        <h2>Trending</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-shopping-bag-line text-xl"></i>
-                        <h2>Shopping</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-music-line text-xl"></i>
-                        <h2>Music</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-film-line text-xl"></i>
-                        <h2>Films</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-live-line text-xl"></i>
-                        <h2>Live</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-trophy-line text-xl"></i>
-                        <h2>Sports</h2>
-                    </div>
-                    <div class="flex cursor-pointer hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
-                        <i class="ri-arrow-down-s-line text-xl"></i>
-                        <h2>Show More</h2>
-                    </div>
+                        <div class="border-b-[1px] px-3 py-2">
+                            <a href="/you">
+                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <h2 class="font-semibold text-md">You</h2>
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </div>
+                            </a>
+                            
+                            <a href="/channel/<%=loggedUser.id%>">
+                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-account-box-line text-xl"></i>
+                                    <h2 class="md:block hidden">Channel</h2>
+                                </div>
+                            </a>
+                            <a href="/history">
+                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-history-line text-xl"></i>
+                                    <h2 class="md:block hidden">History</h2>
+                                </div>
+                            </a>
+                            <a href="/studio">
+                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-video-line text-xl"></i>
+                                    <h2 class="md:block hidden">Your Videos</h2>
+                                </div>
+                            </a>
+                            <a href="/playlist/some">
+                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                    <i class="ri-time-line text-xl"></i>
+                                    <h2 class="md:block hidden">Watch Later</h2>
+                                </div>
+                            </a>
+
+                        </div>
+                        <div class="border-b-[1px] px-3 py-2">
+                            <div class="flex cursor-pointer items-center rounded-lg gap-6 py-1.5 px-2">
+                                <h2 class="font-semibold text-md">Subscriptions</h2>
+                                <i class="ri-arrow-right-s-line"></i>
+                            </div>
+
+                           
+                        </div>
+                        <%}else{%>
+                            <div class="border-b-[1px] px-3 py-2">
+
+
+                                <a href="/you">
+                                    <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                        <i class="ri-video-line text-xl"></i>
+                                        <h2 class="md:block hidden">You</h2>
+                                    </div>
+                                </a>
+                                <a href="/history">
+                                    <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                        <i class="ri-history-line text-xl"></i>
+                                        <h2 class="md:block hidden">History</h2>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="border-b-[1px] px-8 py-4">
+                                <p class="text-sm leading-tight mb-3">Sign in to like videos, comment, and subscribe.
+                                </p>
+                                <a class="button google" href="/login/federated/google"><button
+                                        class="flex items-center hover:bg-blue-100 hover:border-transparent text-blue-600 gap-1.5 border border-zinc-300 px-2.5 rounded-full">
+                                        <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
+                                        <span class="text-sm font-medium">Sign in</span>
+                                    </button></a>
+                            </div>
+
+
+                            <%}%>
+                              
+
+
                 </div>
+                <%}%>
+                    <div
+                        class="bottom-nav z-10 flex w-full fixed bottom-0 left-0 h-[8vh] justify-between items-center bg-white">
+                        <i
+                            class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+                        <i
+                            class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+                        <i
+                            class="ri-add-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+                        <i
+                            class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
+                        <i
+                            class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
 
+                    </div>
 
-            </div>
-            <%}%>
-            <div class="bottom-nav z-10 flex w-full fixed bottom-0 left-0 h-[8vh] justify-between items-center bg-white">
-                <i class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
-                <i class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
-                <i class="ri-add-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
-                <i class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
-                <i class="ri-play-line text-2xl p-2.5 aspect-square h-full text-center rounded-full hover:bg-zinc-100"></i>
-
-            </div>
-
-            <script>
-                let width = document.querySelector('body').getBoundingClientRect().width
-                console.log(width)
-                if(width<'768'){
-                    document.querySelector('.left').style.display="none"
-                }else{
-                    document.querySelector('.bottom-nav').style.display="none"
-                }
-            </script>
+                    <script>
+                        let width = document.querySelector('body').getBoundingClientRect().width
+                        console.log(width)
+                        if (width < '768') {
+                            document.querySelector('.left').style.display = "none"
+                        } else {
+                            document.querySelector('.bottom-nav').style.display = "none"
+                        }
+                    </script>

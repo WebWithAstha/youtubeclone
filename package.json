@@ -14,8 +14,6 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "express-session": "^1.18.0",
-    "ffmpeg-static": "^5.2.0",
-    "fluent-ffmpeg": "^2.1.2",
     "http-errors": "~1.6.3",
     "mongoose": "^8.2.0",
     "morgan": "~1.9.1",
