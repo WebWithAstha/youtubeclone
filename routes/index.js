@@ -6,12 +6,14 @@ const videoModel = require('./video')
 const commentModel = require('./comments')
 const playlistModel = require('./playlist')
 const uploadVid = require('./multer')
-const uploadImg = require('./multer2')
+const uploadImg = require('./multer2.js')
 const GoogleStrategy = require('passport-google-oidc');
 const passport = require('passport')
 const fs = require('fs')
 const axios = require('axios');
 const comments = require('./comments');
+
+const utilsController = require('../controllers/utils_controller.js')
 
 
 
@@ -56,6 +58,7 @@ passport.use(new GoogleStrategy({
 /* GET home page. */
 router.get('/', async function (req, res, next) {
   const allVideos = await videoModel.find().populate('user')
+  const updatedVideos = allVideos.map(video=>({...video.toObject(),timespan:utilsController.timeSpanFromNow(video.uploadDate)}))
   function shuffle(array) {
     for (var i = array.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -65,7 +68,7 @@ router.get('/', async function (req, res, next) {
     }
     return array;
   }
-  const shuffledVideos = shuffle(allVideos)
+  const shuffledVideos = shuffle(updatedVideos)
 
 
 
@@ -106,7 +109,14 @@ router.get('/video/:videoid', async function (req, res, next) {
         }
       }
     })
+
+  if(video.views.indexOf(loggedUser._id)===-1){
+    video.views.push(loggedUser._id)
+    await video.save()
+  }
   console.log(video)
+
+   
   const videoUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${video.videoName}?accessKey=${STREAM_KEY}`
   res.render('viewVideo.ejs', { leftSection: false, loggedUser, video, videoUrl });
 });
@@ -124,8 +134,9 @@ router.get('/you', function (req, res, next) {
 });
 router.get('/channel/:userId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
-  const user = await userModel.findOne({ _id: req.params.userId }).populate('uploadedVideo')
-  res.render('profile.ejs', { leftSection: true, loggedUser, user });
+  const user = await userModel.findOne({ _id: req.params.userId })
+  const videos = await videoModel.find({user:req.params.userId})
+  res.render('profile.ejs', { leftSection: true, loggedUser, user,videos });
 });
 router.get('/playlist/:some', function (req, res, next) {
   res.render('playlist.ejs', { leftSection: true, loggedUser: req.user });
@@ -177,19 +188,18 @@ router.post('/upload/video', uploadVid.single('video'), async function (req, res
     videoName: req.file.filename
   })
 
-
-  loggedUser.uploadedVideo.push(newVideo._id);
-  loggedUser.save()
   fs.unlinkSync(`./public/uploads/videos/${req.file.filename}`)
   res.status(200).json(newVideo)
 
 })
 
-router.post('/upload/details/:videoId', async function (req, res, next) {
+router.post('/upload/details/:videoId',uploadImg.single('thumbnail'), async function (req, res, next) {
+  console.log('route hit')
   const loggedUser = await userModel.findOne({ username: req.user.username });
+  console.log(req.file)
   const video = await videoModel.findOneAndUpdate(
     { _id: req.params.videoId },
-    { description: req.body.description, visibility: req.body.visibility, title: req.body.title, thumbnail: req.body.thumbnail },
+    { description: req.body.description, visibility: req.body.visibility, title: req.body.title,thumbnail: req.file.filename},
     { new: true }
   )
   res.redirect('/studio')
@@ -225,7 +235,6 @@ router.post('/like/video/:videoId', async function (req, res, next) {
     loggedUser.likedVideo.push(video._id)
     if (video.dislikes.indexOf(loggedUser._id) !== -1) {
       video.dislikes.splice(video.dislikes.indexOf(loggedUser._id), 1)
-      console.log(video.dislikes)
     }
   } else {
     video.likes.splice(video.likes.indexOf(loggedUser._id), 1)
@@ -299,15 +308,32 @@ router.post('/comment/video/:videoId', async function (req, res, next) {
 
 router.post('/reply/comment/:commentId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
-  const comment = await commentModel.findOne({ _id: req.params.commentId })
+  let comment = await commentModel.findOne({ _id: req.params.commentId })
   const reply = await commentModel.create({
     comment: req.body.comment,
     user: loggedUser._id,
+
   })
+  if(comment.level ==0){
+    reply.level = 1
+    reply.save()
+  }else if(comment.level==1){
+    reply.level =comment._id
+    reply.save()
+  }else{
+    comment = await commentModel.findOne({ _id: comment.level})
+  }
+
   comment.replies.push(reply._id)
   await comment.save()
   res.status(200).json(reply)
 })
+
+router.post('/replies', async function (req, res, next) {
+  const comment = await commentModel.findOne({ _id: req.body.commentId}).populate('replies')
+  res.status(200).json(comment.replies)
+})
+
 
 
 

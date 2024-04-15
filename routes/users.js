@@ -3,7 +3,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/youtubeclone')
 
 const userSchema = mongoose.Schema({
   username: String,
-  profileImg: String,
+  profileImg: {
+    type: String,
+    default:'def.jpg'
+  },
   channelBg: String,
   email: String,
   channel:String,
@@ -11,12 +14,6 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  uploadedVideo: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'video'
-    }
-  ],
   watchedVideo: [
     {
       type: mongoose.Schema.Types.ObjectId,

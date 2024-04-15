@@ -134,8 +134,7 @@
                                 </h1>
                                 <div class="video-desc flex gap-5">
 
-                                    <a  href="/video/<%=video._id%>" onmouseenter="videoMouseEnterHandle(this)"
-                                        onmouseleave="videoMouseLeaveHandle(this)"
+                                    <a  href="/video/<%=video._id%>"
                                         class="cursor-pointer border flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
                                         <video class="h-full" ontimeupdate="pauseVideo(this)" muted preload="metadata" controlsList="nodownload" src="/uploads/videos/<%=video.videoName%>"></video>
                                         <%if(video.thumbnail){%>
@@ -148,7 +147,7 @@
                                         </a>
 
                                     <div class="description w-[13vw]">
-                                        <h1 class="font-medium ">
+                                        <h1 class="font-medium truncate leading-tight">
                                             <%=video.title%>
                                         </h1>
                                         <p class="text-sm text-zinc-400">
@@ -213,7 +212,8 @@
             dynamicForm = document.createElement('form')
             dynamicForm.className = "upload-pannel sm:h-2/3 h-4/5 sm:w-[50rem] w-full bg-zinc-100 flex flex-col relative"
             dynamicForm.setAttribute('action', `/upload/details/${videoId}`)
-            dynamicForm.setAttribute('method', 'post')
+            dynamicForm.setAttribute('method', 'POST')
+            dynamicForm.setAttribute('enctype','multipart/form-data')
         }
 
         function showUploadMediaBox(uploadType) {
@@ -342,7 +342,7 @@
                             </div>
 
                             <h2 class="text-md font-medium mt-7">Thumbnail</h2>
-                            <input onchange="thumbnailInputChangeHandle(this,'${response._id}')" type="file" accept="image/*" hidden name="thumbnail" id="thumbnailFileInput">
+                            <input onchange="thumbnailInputChangeHandle(this)" type="file" accept="image/*" hidden name="thumbnail" id="thumbnailFileInput">
                             <div onclick="selectThumbnailFile()" class="thumbnail rounded-t-md max-w-40 mt-2 aspect-video bg-zinc-400">
                                 <img src="/uploads/images/add.jpg" class="w-full object-cover h-full" alt="">
                             </div>
@@ -367,9 +367,9 @@
                             <div class="about p-4 bg-zinc-200 max-w-80 sm:min-w-52">
                                 <h4 class="text-sm leading-tight text-zinc-500">Video link</h4>
                                 <a href=""
-                                    class="text-sm leading-tight text-blue-500 break-all">https://youtubecloneblabla.com</a>
+                                    class="text-sm leading-tight text-blue-500 break-all break-all">https://youtubecloneblabla.com</a>
                                 <h4 class="text-sm leading-tight pt-4 text-zinc-500">Filename</h4>
-                                <h4 class="text-sm leading-tight">${response.title}</h4>
+                                <h4 class="text-sm leading-tight break-all">${response.title}</h4>
 
                             </div>
 
@@ -380,9 +380,7 @@
                     </div>
                     `
                     document.querySelector('.upload-overlay').appendChild(dynamicForm)
-
                     document.querySelector('.video-title-inp').focus();
-
                 })
         }
 
@@ -408,7 +406,7 @@
                             </div>
 
                             <h2 class="text-md font-medium mt-7">Thumbnail</h2>
-                            <input type="file" hidden name="thumbnail" id="thumbnailFileInput">
+                            <input onchange="thumbnailInputChangeHandle(this)" type="file" accept="image/*" hidden name="thumbnail" id="thumbnailFileInput">
                             <div onclick="selectThumbnailFile()" class="thumbnail rounded-t-md max-w-40 mt-2 aspect-video bg-zinc-400">
                                 <img src="/uploads/images/add.jpg" class="w-full object-cover h-full" alt="">
                             </div>
@@ -442,7 +440,7 @@
                         </div>
                     </div>
                     <div class="flex justify-end px-4 py-1 pb-2">
-                        <input class="bg-blue-500 text-white px-5 py-1.5 rounded-md" type="submit" value="Publish">
+                        <input class="bg-blue-500 text-white px-5 py-1.5 rounded-md" type="submit" value="Update">
                     </div>
                     `
 
@@ -459,7 +457,7 @@
             document.querySelector('.upload-overlay #thumbnailFileInput').click();
         }
 
-        function thumbnailInputChangeHandle(input, videoId) {
+        function thumbnailInputChangeHandle(input) {
             if (input.files[0].type.includes('image')) {
                 document.querySelector('.thumbnail img').src= URL.createObjectURL(input.files[0])
             }

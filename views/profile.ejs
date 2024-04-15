@@ -7,10 +7,13 @@
             <div class="details">
                 <h1 class="text-4xl font-bold mb-2"><%=user.username%></h1>
                 <p class="text-sm text-zinc-700 font-medium mb-2"><%=user.channel%></p>
-                <p class="text-sm text-zinc-700 font-medium mb-4">More about this channel <i class="ri-arrow-right-s-line"></i></p>
-                <button class="px-4 py-1.5 text-sm mr-2 captiliaze font-medium bg-zinc-200 rounded-3xl">Customise channel</button>
-                <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage videos</button>
-                
+                <%if(loggedUser._id.equals(user._id)){%>
+                    
+                    <p class="text-sm text-zinc-700 font-medium mb-4">More about this channel <i class="ri-arrow-right-s-line"></i></p>
+                    <button class="px-4 py-1.5 text-sm mr-2 captiliaze font-medium bg-zinc-200 rounded-3xl">Customise channel</button>
+                    <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage videos</button>
+                    
+                <%}%>
             </div>
         </div>
         <div class="caetogary px-20 border-b border-b-zinc-200 w-full mb-4 flex gap-5 items-center">
@@ -20,10 +23,10 @@
             <i class="ri-search-line text-lg text-zinc-500"></i>
             <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3" type="text">
         </div>
-        <div class="videos px-20 flex flex-wrap gap-5 overflow-y-auto h-[85vh] py-2">
-            <%user.uploadedVideo.forEach(video=>{%>
+        <div class="videos px-20 grid grid-cols-3 gap-5 overflow-y-auto h-[85vh] py-2">
+            <%videos.forEach(video=>{%>
 
-                <div class="w-[26vw] mb-1 video">
+                <div class=" mb-1 video ">
                     <div class="rounded-xl h-56 bg-zinc-200 mb-2">
                     </div>
                     <h2 class="leading-tight"><%=video.title%></h2>
@@ -35,7 +38,7 @@
                     </div>
                 </div>
             <%})%>
-            <div class="w-[26vw] mb-1 playlist relative">
+            <div class=" mb-1 playlist relative">
                 <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
                 <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 "></div>
                 <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="">

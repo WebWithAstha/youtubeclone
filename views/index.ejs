@@ -51,13 +51,13 @@
                         <h2 class="leading-tight">
                             <%=video.title%>
                         </h2>
-                        <h4 class="text-zinc-500 text-sm">channel name</h4>
+                        <h4 class="text-zinc-500 text-sm"><%=video.user.channel%></h4>
                         <div class="flex gap-1 items-center text-zinc-500">
                             <h4 class="text-sm">
-                                <%=video.likes%> views
+                                <%=video.views.length%> views
                             </h4>
                             <i class="ri-circle-fill text-[4px]"></i>
-                            <h4 class="text-sm">23 hours ago</h4>
+                            <h4 class="text-sm"><%=video.timespan%> ago</h4>
                         </div>
                     </div>
                 </a>
@@ -81,7 +81,7 @@
                         <div class="flex gap-1 items-center text-zinc-500">
                             <h4 class="text-sm">15 views</h4>
                             <i class="ri-circle-fill text-[4px]"></i>
-                            <h4 class="text-sm">23 hours ago</h4>
+                            <h4 class="text-sm">12 hours ago</h4>
                         </div>
                     </div>
 

@@ -142,7 +142,7 @@
       </div>
       <div class="comments">
         <%video.comments.forEach(comment=>{%>
-          <div class="comment flex gap-1 mt-5 border-b-2">
+          <div class="comment flex gap-1 mt-5 mb-2">
             <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full"></div>
             <div class="comment-dets w-full">
               <div class="flex ml-2 gap-1 items-center">
@@ -159,66 +159,9 @@
                 <span onclick="showReplyBox(this,'<%=comment._id%>')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
               </div>
               <%if(comment.replies.length > 0){%>
-                <div class="replies-wrap">
-                  <button class="mt-2 text-sm px-5 py-1 hover:bg-blue-100 font-semibold text-blue-700 rounded-full"><%=comment.replies.length%> replies</button>
+              <div class="replies-wrap">
+                  <button onclick="showReplies(this,'<%=comment._id%>')" class="mt-2 text-sm px-5 py-1 hover:bg-blue-100 font-semibold text-blue-700 rounded-full"><%=comment.replies.length%> replies</button>
                   <div class="replies">
-                    <%comment.replies.forEach(comment=>{%>
-                      <div class="comment flex gap-1 mt-5">
-                        <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full"></div>
-                        <div class="comment-dets w-full">
-                          <div class="flex ml-2 gap-1 items-center">
-                            <h3 class="font-medium text-md text-zinc-700">
-                              <%=comment.user.channel%>
-                            </h3>
-                            <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
-                          </div>
-                          <p class="ml-2 text-sm">
-                            <%=comment.comment%>
-                          </p>
-                          <div class="flex items-center mt-1 gap-1 ml-3">
-                            <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
-                            <span onclick="showReplyBox(this,'<%=comment._id%>')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
-                          </div>
-                          <%if(comment.replies.length > 0){%>
-                            <div class="replies-wrap">
-                              <button class="mt-2 text-sm px-5 py-1 hover:bg-blue-100 font-semibold text-blue-700 rounded-full"><%=comment.replies.length%> replies</button>
-                              <div class="replies">
-                                <%comment.replies.forEach(comment=>{%>
-                                  <div class="comment flex gap-1 mt-5">
-                                    <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full"></div>
-                                    <div class="comment-dets w-full">
-                                      <div class="flex ml-2 gap-1 items-center">
-                                        <h3 class="font-medium text-md text-zinc-700">
-                                          <%=comment.user.channel%>
-                                        </h3>
-                                        <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
-                                      </div>
-                                      <p class="ml-2 text-sm">
-                                        <%=comment.comment%>
-                                      </p>
-                                      <div class="flex items-center mt-1 gap-1 ml-3">
-                                        <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
-                                        <span onclick="showReplyBox(this,'<%=comment._id%>')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
-                                      </div>
-                                      <%if(comment.replies.length > 0){%>
-                                        <div class="replies-wrap">
-                                          <button class="mt-2 text-sm px-5 py-1 hover:bg-blue-100 font-semibold text-blue-700 rounded-full"><%=comment.replies.length%> replies</button>
-                                          <div class="replies">
-                        
-                                          </div>
-                                        </div>
-                                        <%}%>
-                                      </div>
-                                    </div>
-                          
-                                    <%})%>
-                              </div>
-                            </div>
-                            <%}%>
-                          </div>
-                        </div>
-              
-                        <%})%>
                   </div>
                 </div>
               <%}%>
@@ -410,6 +353,7 @@
             elem.parentNode.insertAdjacentElement('afterend', replyBox);
 
     }
+
     function removeReplyBox(elem, commentId){
       elem.parentNode.parentNode.parentNode.parentNode.removeChild(document.querySelector(`#reply${commentId}`))
     }
@@ -420,7 +364,7 @@
       if(inp.value==='')return
       let replies=btn.parentNode.parentNode.parentNode.parentNode.querySelector('.replies')
       axios.post(`/reply/comment/${commentId}`, {
-        comment: inp.value
+        comment: inp.value,
       })
       .then(reply=>{
         replies.innerHTML+=`
@@ -435,17 +379,48 @@
             <div class="flex items-center mt-1 gap-1 ml-3">
                 <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
                 <span onclick="showReplyBox(this,'${reply.data._id}')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
-              </div>
+            </div>
+            
           </div>
         </div>
         `
       })
       removeReplyBox(btn,commentId)
-
-
       inp.value = ''
     }
 
+    function showReplies(btn,commentId) {
+      let repliescontainer = btn.parentNode.querySelector('.replies')
+      axios.post('/replies',{
+        commentId:commentId
+      })
+      .then(response=>{
+         response.data.forEach(reply=>{
+          repliescontainer.innerHTML+=`
+          <div class="comment flex gap-1 mt-5">
+          <div class="img w-8 aspect-square h-max bg-gray-500 rounded-full"></div>
+          <div class="comment-dets w-full">
+            <div class="flex ml-2 gap-1 items-center">
+              <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channel%></h3>
+              <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
+            </div>
+            <p class="ml-2 text-sm">${reply.comment}</p>
+            <div class="flex items-center mt-1 gap-1 ml-3">
+                <hr class="w-10 h-[1px] bg-zinc-200 mt-.5">
+                <span onclick="showReplyBox(this,'${reply._id}')" class="hover:bg-zinc-200 px-4 cursor-pointer rounded-full py-1 text-sm">Reply</span>
+            </div>
+            ${reply.replies.length>0?`<div class="replies-wrap">
+                  <button onclick="showReplies(this,'${reply._id}')" class="mt-2 text-sm px-5 py-1 hover:bg-blue-100 font-semibold text-blue-700 rounded-full">${reply.replies.length}   replies</button>
+                  <div class="replies">
+                  </div>
+                </div>`:''}
+          </div>
+        </div>
+          `
+         })
+ 
+      })
+    }
 
 
 
