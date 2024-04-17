@@ -42,10 +42,6 @@ const videoSchema = mongoose.Schema({
         type:String,
         default:'private'
     },
-    tags:{
-        type:Array,
-        default:[]
-    }
     
 
 

@@ -110,16 +110,22 @@ router.get('/video/:videoid', async function (req, res, next) {
       }
     })
 
+
+
   if(video.views.indexOf(loggedUser._id)===-1){
     video.views.push(loggedUser._id)
     await video.save()
   }
-  console.log(video)
-
+  if(loggedUser.watchedVideo.indexOf(video._id)!==-1){
+    loggedUser.watchedVideo.splice(loggedUser.watchedVideo.indexOf(video._id),1)
+  }
+  loggedUser.watchedVideo.push(video._id)
+  await loggedUser.save()
    
   const videoUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${video.videoName}?accessKey=${STREAM_KEY}`
   res.render('viewVideo.ejs', { leftSection: false, loggedUser, video, videoUrl });
 });
+
 router.get('/history', function (req, res, next) {
   res.render('history.ejs', { leftSection: true, loggedUser: req.user });
 });
@@ -194,9 +200,7 @@ router.post('/upload/video', uploadVid.single('video'), async function (req, res
 })
 
 router.post('/upload/details/:videoId',uploadImg.single('thumbnail'), async function (req, res, next) {
-  console.log('route hit')
   const loggedUser = await userModel.findOne({ username: req.user.username });
-  console.log(req.file)
   const video = await videoModel.findOneAndUpdate(
     { _id: req.params.videoId },
     { description: req.body.description, visibility: req.body.visibility, title: req.body.title,thumbnail: req.file.filename},
@@ -228,6 +232,7 @@ router.get('/delete/video/:videoId', async function (req, res, next) {
 
 // liking the video
 router.post('/like/video/:videoId', async function (req, res, next) {
+  console.log("hey")
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ _id: req.params.videoId })
   if (video.likes.indexOf(loggedUser._id) === -1) {
@@ -242,6 +247,7 @@ router.post('/like/video/:videoId', async function (req, res, next) {
   }
   await video.save()
   await loggedUser.save()
+  console.log(video.likes,video.likes.length)
   res.status(200).json(video.likes.length)
 })
 
@@ -316,14 +322,14 @@ router.post('/reply/comment/:commentId', async function (req, res, next) {
   })
   if(comment.level ==0){
     reply.level = 1
-    reply.save()
   }else if(comment.level==1){
-    reply.level =comment._id
-    reply.save()
+    reply.level = comment._id
   }else{
     comment = await commentModel.findOne({ _id: comment.level})
+    reply.level =comment._id
   }
 
+  reply.save()
   comment.replies.push(reply._id)
   await comment.save()
   res.status(200).json(reply)
