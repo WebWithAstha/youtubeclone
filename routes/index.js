@@ -126,8 +126,9 @@ router.get('/video/:videoid', async function (req, res, next) {
   res.render('viewVideo.ejs', { leftSection: false, loggedUser, video, videoUrl });
 });
 
-router.get('/history', function (req, res, next) {
-  res.render('history.ejs', { leftSection: true, loggedUser: req.user });
+router.get('/history',async function (req, res, next) {
+  const loggedUser = await userModel.findOne({username:req.session.passport.user.username}).populate('watchedVideo')
+  res.render('history.ejs', { leftSection: true, loggedUser});
 });
 router.get('/results', function (req, res, next) {
   res.render('results.ejs', { leftSection: true, loggedUser: req.user });
@@ -181,9 +182,6 @@ const uploadFileToBunnyCDN = (filePath, fileName) => {
   });
 };
 
-
-
-
 router.post('/upload/video', uploadVid.single('video'), async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username });
   const response = await uploadFileToBunnyCDN(`./public/uploads/videos/${req.file.filename}`, req.file.filename)
@@ -221,13 +219,7 @@ router.get('/delete/video/:videoId', async function (req, res, next) {
     fs.unlink('./public/uploads/images/' + video.thumbnail, (err) => {
     })
   })
-
-
   res.redirect('/studio')
-
-
-
-
 })
 
 // liking the video
@@ -339,6 +331,8 @@ router.post('/replies', async function (req, res, next) {
   const comment = await commentModel.findOne({ _id: req.body.commentId}).populate('replies')
   res.status(200).json(comment.replies)
 })
+
+
 
 
 
