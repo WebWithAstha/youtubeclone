@@ -15,19 +15,14 @@ const playlistSchema = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'video'
     }],
-    createdDate:{
-        type: Date,
-        default: Date.now
-    },
     visibility:{
         type:String,
         default:'public'
     },
-    tags:{
-        type:Array,
-        default:[]
-    }
-    
+    createdDate:{
+        type: Date,
+        default: Date.now
+    },
 
 
 })

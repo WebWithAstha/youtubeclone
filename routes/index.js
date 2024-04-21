@@ -13,7 +13,9 @@ const fs = require('fs')
 const axios = require('axios');
 const comments = require('./comments');
 
-const utilsController = require('../controllers/utils_controller.js')
+const utilsController = require('../controllers/utils_controller.js');
+const { populate } = require('dotenv');
+const video = require('./video');
 
 
 
@@ -127,7 +129,9 @@ router.get('/video/:videoid', async function (req, res, next) {
 });
 
 router.get('/history',async function (req, res, next) {
-  const loggedUser = await userModel.findOne({username:req.session.passport.user.username}).populate('watchedVideo')
+  const loggedUser = await userModel.findOne({username:req.session.passport.user.username})
+  .populate('watchedVideo')
+  .populate({path:'watchedVideo',populate:'user'})
   res.render('history.ejs', { leftSection: true, loggedUser});
 });
 router.get('/results', function (req, res, next) {
@@ -156,6 +160,25 @@ router.get('/studio', async function (req, res, next) {
 
 router.get('/subscriptions', async function (req, res, next) {
   res.render('subscriptions.ejs', { leftSection: true, loggedUser: req.user });
+});
+router.post('/videos', async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username})
+  const videos = await videoModel.find({user:loggedUser._id})
+  console.log(videos)
+  res.status(200).json(videos)
+});
+router.post('/create/playlist', async function (req, res, next) {
+  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username})
+  const videoIds = req.body['video[]']
+  const newPlaylist = new playlistModel({
+  user:loggedUser._id,
+  title:req.body.title,
+  description: req.body.description,
+  videos:videoIds.map(videoId =>videoId),
+  visibility:req.body.visibility
+  })
+  await newPlaylist.save()
+  res.redirect('back')
 });
 
 
@@ -332,9 +355,16 @@ router.post('/replies', async function (req, res, next) {
   res.status(200).json(comment.replies)
 })
 
-
-
-
+router.post('/history/remove/:videoId',async function (req, res, next) {
+  const loggedUser = await userModel.findOne({username:req.session.passport.user.username})
+  loggedUser.watchedVideo.splice(loggedUser.watchedVideo.indexOf(req.params.videoId),1)
+  await loggedUser.save()
+  res.status(200).json('video removed from history successfully.');
+});
+router.post('/history/clearall',async function (req, res, next) {
+  const loggedUser = await userModel.findOneAndUpdate({username:req.session.passport.user.username},{$set:{watchedVideo:[]}})
+  res.status(200).json('watch history cleared successfully.');
+});
 
 
 module.exports = router;

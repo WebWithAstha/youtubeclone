@@ -23,11 +23,15 @@
             <i class="ri-search-line text-lg text-zinc-500"></i>
             <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3" type="text">
         </div>
-        <div class="videos px-20 grid grid-cols-3 gap-5 overflow-y-auto h-[85vh] py-2">
+        <div class="videos px-20 relative grid grid-cols-3 gap-5 overflow-y-auto h-[85vh] py-2">
             <%videos.forEach(video=>{%>
-
+                
                 <div class=" mb-1 video ">
-                    <div class="rounded-xl h-56 bg-zinc-200 mb-2">
+                    
+                    <div class="rounded-xl w-full relative overflow-hidden h-56 bg-zinc-200 mb-2">
+                        <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
+                            <img src="/uploads/images/<%=video.thumbnail%>" class="w-full h-full object-cover" alt="">
+                        </div>
                     </div>
                     <h2 class="leading-tight"><%=video.title%></h2>
                     <h4 class="text-zinc-500 text-sm"><%=user.channel%></h4>

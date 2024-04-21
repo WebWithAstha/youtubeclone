@@ -127,7 +127,6 @@
                             class="ri-filter-3-line text-2xl text-zinc-400 mr-5"></i> Filter</h1>
                     <div class="filterdVideo px-5">
                         <%videos.forEach(function(video,i){%>
-
                             <div class="video relative border-b py-3 flex justify-between">
                                 <h1>
                                     <%=i+1%>
@@ -136,7 +135,7 @@
 
                                     <a  href="/video/<%=video._id%>"
                                         class="cursor-pointer border flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
-                                        <video class="h-full" ontimeupdate="pauseVideo(this)" muted preload="metadata" controlsList="nodownload" src="/uploads/videos/<%=video.videoName%>"></video>
+                                        <video class="h-full" muted  controlsList="nodownload" src="/uploads/videos/<%=video.videoName%>"></video>
                                         <%if(video.thumbnail){%>
                                             <div
                                                 class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
@@ -151,7 +150,7 @@
                                             <%=video.title%>
                                         </h1>
                                         <p class="text-sm text-zinc-400">
-                                            <%=video.description%>
+                                            <%= video.description.slice(0,70)+" ..." %>
                                         </p>
                                     </div>
                                 </div>
@@ -173,7 +172,11 @@
             </div>
         </div>
     </div>
+    
 
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
 
@@ -236,38 +239,56 @@
         function showCreatePlayistForm() {
             createForm()
             dynamicForm.action = '/create/playlist'
+            dynamicForm.setAttribute('enctype', '')
 
-            dynamicForm.innerHTML = `
-            <h1 class="video-title text-xl font-medium px-6 py-3 border-b-2">Create a new playlist</h1>
-            <div class="center w-full overflow-hidden flex-1 gap-5 px-6 mt-2">
-                    <div onclick="setFocus(this)" class="border border-zinc-700 rounded-md p-1 px-3">
-                        <span class="pointer-events-none text-zinc-600 text-[.8rem]">Title (required)</span>
-                        <input class="focus-me video-title-inp bg-transparent w-full outline-none relative text-md" name="title" id=""
-                            placeholder="Enter playlist title." required="true">
+            let template=``
+            axios.post(`/videos`)
+            .then(response=>{
+                response.data.forEach(video=>{
+                    template+=`
+                    <div class="flex w-max p-1 px-2 items-center">
+
+                        <input type="checkbox" name="video[]" value="${video._id}" id="">
+                        <div class="w-10 h-4 bg-zinc-700 ml-4 mr-2 overflow-hidden rounded-sm">
+                            <img class="w-full h-full object-cover" src="/uploads/images/${video.thumbnail}">
+                            </div>
+                            <h4>${video.title}</h4>
                     </div>
-                    <div onclick="setFocus(this)" class="border mt-6 border-zinc-700 rounded-md p-1 px-3">
-                        <span class="pointer-events-none text-zinc-600 text-[.8rem]">Description</span>
-                        <textarea class="focus-me bg-transparent w-full text-zinc-900 outline-none relative text-md"
-                            name="description" id="" placeholder="Tell viewers about your video."></textarea>
-                    </div>
-                    <div onclick="setFocus(this)" class="border mt-6 border-zinc-700 rounded-md p-1 px-3">
-                        <span class="pointer-events-none text-zinc-600 text-[.8rem]">Tags <span class="opacity-50">(must be comma (,) separated.)</span></span>
-                        <input class="focus-me video-title-inp bg-transparent w-full outline-none relative text-sm h-6" name="tags" id=""
-                            placeholder="Add new tags." >
-                    </div>
-                    <div class="border mt-6 border-zinc-700 rounded-md p-1 px-3">
-                        <span class="pointer-events-none text-zinc-600 text-[.8rem]">Visibility </span>
-                        <select name="visibility" class="bg-transparent w-full -ml-1 outline-none" required>
-                            <option value="option1">Public</option>
-                            <option value="option2">Private</option>
-                          </select>
-                    </div>
-            </div>
-            <div class="flex justify-end px-4 gap-1.5 py-1 pb-2">
-                <h2 onclick="closeOverlay()" class="px-2 py-1.5 rounded-md cursor-pointer uppercase text-sm font-medium text-zinc-500" >Cancel</h2>
-                <input class="px-2 py-1.5 rounded-md cursor-pointer uppercase text-sm font-medium text-zinc-500" type="submit" value="Create">
-            </div>
-            `
+                            `
+                        })
+                        dynamicForm.innerHTML = `
+                        <h1 class="video-title text-xl font-medium px-6 py-3 border-b-2">Create a new playlist</h1>
+                        <div class="center w-full overflow-hidden flex-1 gap-5 px-6 mt-2">
+                                <div onclick="setFocus(this)" class="border border-zinc-700 rounded-md p-1 px-3">
+                                    <span class="pointer-events-none text-zinc-600 text-[.8rem]">Title (required)</span>
+                                    <input class="focus-me video-title-inp bg-transparent w-full outline-none relative text-md" name="title" id=""
+                                        placeholder="Enter playlist title." required="true">
+                                </div>
+                                <div onclick="setFocus(this)" class="border mt-6 border-zinc-700 rounded-md p-1 px-3">
+                                    <span class="pointer-events-none text-zinc-600 text-[.8rem]">Description</span>
+                                    <textarea class="focus-me bg-transparent w-full text-zinc-900 outline-none relative text-md"
+                                        name="description" id="" placeholder="Tell viewers about your video."></textarea>
+                                </div>
+                                <div class="border mt-6 border-zinc-700 rounded-md p-1 px-3">
+                                    <span class="pointer-events-none text-zinc-600 text-[.8rem]">Visibility </span>
+                                    <select name="visibility" class="bg-transparent w-full -ml-1 outline-none" required>
+                                        <option value="option1">Public</option>
+                                        <option value="option2">Private</option>
+                                    </select>
+                                </div>
+                                <div class="border mt-6 border-zinc-700 rounded-md p-1 px-3">
+                                    <span class="pointer-events-none text-zinc-600 text-[.8rem]">Select videos </span>
+                                    ${template}
+                                </div>
+                        </div>
+                        <div class="flex justify-end px-4 gap-1.5 py-1 pb-2">
+                            <h2 onclick="closeOverlay()" class="px-2 py-1.5 rounded-md cursor-pointer uppercase text-sm font-medium text-zinc-500" >Cancel</h2>
+                            <input class="px-2 py-1.5 rounded-md cursor-pointer uppercase text-sm font-medium text-zinc-500" type="submit" value="Create">
+                        </div>
+                        `
+   
+            })
+
             document.querySelector('.upload-overlay').appendChild(dynamicForm)
             openOverlay()
         }
