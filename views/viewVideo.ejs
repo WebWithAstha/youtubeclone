@@ -88,7 +88,7 @@
               <%=video.user.subscribers.length%> subscribers
             </h3>
           </div>
-          <%if(!video.user._id.equals(loggedUser._id)){%>
+          <%if(loggedUser && !video.user._id.equals(loggedUser._id)){%>
             <%if(video.user.subscribers.includes(loggedUser._id)){%>
               <button onclick="toggleSubcribe(this,'<%=video.user._id%>')"
                 class="bg-zinc-200 hover:bg-zinc-300 px-4 py-1.5 rounded-full text-sm flex items-center gap-1 ml-2 overflow-hidden w-max"><i
@@ -104,20 +104,20 @@
           <div class="flex rounded-full overflow-hidden text-sm">
             <button id="like-video-btn" onclick="toggleLike(this,'<%=video._id%>')"
               class=" bg-zinc-200 hover:bg-zinc-300 pr-2 py-1.5 pl-4">
-              <i class="<%= video.likes.includes(loggedUser._id) ?'ri-thumb-up-fill': 'ri-thumb-up-line'%> pr-1.5"></i>
+              <i class="<%= (loggedUser && video.likes.includes(loggedUser._id)) ?'ri-thumb-up-fill': 'ri-thumb-up-line'%> pr-1.5"></i>
               <span>
                 <%=video.likes.length%>
               </span>
             </button>
             <button id="dislike-video-btn" onclick="toggleDislike(this,'<%=video._id%>')"
               class="bg-zinc-200 hover:bg-zinc-300 pl-2 py-1.5 pr-4">
-              <i class="<%=video.dislikes.includes(loggedUser._id) ?'ri-thumb-down-fill' : 'ri-thumb-down-line'%>"></i>
+              <i class="<%=(loggedUser && video.dislikes.includes(loggedUser._id)) ?'ri-thumb-down-fill' : 'ri-thumb-down-line'%>"></i>
             </button>
           </div>
 
           <button onclick="toggleWatchLater(this,'<%=video._id%>')"
             class="bg-zinc-200 hover:bg-zinc-300 px-4 py-1.5 rounded-full text-sm">
-            <i class="<%=loggedUser.watchLater.includes(video._id) ? 'ri-check-line' : 'ri-time-line'%>"></i>
+            <i class="<%=(loggedUser && loggedUser.watchLater.includes(video._id)) ? 'ri-check-line' : 'ri-time-line'%>"></i>
             Watch Later
           </button>
 
@@ -236,6 +236,8 @@
     }
 
     function toggleLike(btn, videoId) {
+      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+
       const likeIcon = btn.querySelector('i')
       const dislikeIcon = document.querySelector('#dislike-video-btn i')
       if (likeIcon.classList.contains('ri-thumb-up-line') && dislikeIcon.classList.contains('ri-thumb-down-fill')) {
@@ -245,7 +247,7 @@
       likeIcon.classList.toggle('ri-thumb-up-line')
       likeIcon.classList.toggle('ri-thumb-up-fill')
       console.log(btn.querySelector('span'))
-      axios.post(`/like/video/${videoId}`)
+      axios.post(`/video/like/${videoId}`)
       .then(response => {
           console.log(response.data)
           btn.querySelector('span').innerHTML = response.data
@@ -253,6 +255,8 @@
     }
 
     function toggleDislike(btn, videoId) {
+      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+
       const dislikeIcon = btn.querySelector('i')
       const likeIcon = document.querySelector('#like-video-btn i')
       if (dislikeIcon.classList.contains('ri-thumb-down-line') && likeIcon.classList.contains('ri-thumb-up-fill')) {
@@ -261,7 +265,7 @@
       }
       dislikeIcon.classList.toggle('ri-thumb-down-fill')
       dislikeIcon.classList.toggle('ri-thumb-down-line')
-      axios.post(`/dislike/video/${videoId}`)
+      axios.post(`/video/dislike/${videoId}`)
         .then(response => {
           document.querySelector('#like-video-btn span').innerHTML = response.data
       })
@@ -270,6 +274,8 @@
     }
 
     function toggleSubcribe(btn, userId) {
+      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+
       axios.post(`/subscribe/user/${userId}`)
 
       if (btn.textContent === "Subscribe") {
@@ -293,17 +299,20 @@
     }
 
     function toggleWatchLater(btn, videoId) {
+      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+
       btn.querySelector("i").classList.toggle("ri-time-line")
       btn.querySelector("i").classList.toggle("ri-check-fill")
-      axios.post(`/watchLater/video/${videoId}`)
+      axios.post(`/video/watchlater/${videoId}`)
     }
 
   
 
     function comment(btn, videoId) {
+      if(!'<%=loggedUser%>')return alert('Please sign in!!')
       let inp = btn.parentNode.querySelector('input')
       if(inp.value==='')return
-      axios.post(`/comment/video/${videoId}`, {
+      axios.post(`/video/comment/${videoId}`, {
         comment: inp.value
       })
         .then(comment => {
@@ -313,7 +322,7 @@
           <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
           <div class="comment-dets w-full">
             <div class="flex ml-2 gap-1 items-center">
-              <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channel%></h3>
+              <h3 class="font-medium text-md text-zinc-700">abc</h3>
               <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
             </div>
             <p class="ml-2 text-sm">${comment.data.comment}</p>
@@ -337,6 +346,8 @@
 
 
     function showReplyBox(elem,commentId){
+      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+
 
       if(document.querySelector(`#reply${commentId}`))return;
       let replyBox = document.createElement("div")
@@ -366,6 +377,7 @@
     
 
     function reply(btn,commentId) {
+      if(!'<%=loggedUser%>')return alert('Please sign in!!')
       let inp = btn.parentNode.parentNode.querySelector('input')
       if(inp.value==='')return
       let replies=btn.parentNode.parentNode.parentNode.parentNode.querySelector('.replies')
@@ -378,7 +390,7 @@
           <div class="img w-8 aspect-square h-max bg-gray-500 rounded-full"></div>
           <div class="comment-dets w-full">
             <div class="flex ml-2 gap-1 items-center">
-              <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channel%></h3>
+              <h3 class="font-medium text-md text-zinc-700">abc</h3>
               <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
             </div>
             <p class="ml-2 text-sm">${reply.data.comment}</p>
@@ -396,10 +408,9 @@
     }
 
     function showReplies(btn,commentId) {
+      if(!'<%=loggedUser%>')return alert('Please sign in!!')
 
       let repliescontainer = btn.parentNode.querySelector('.replies')
-      // if(btn,textContent.includes('hide'))
-      console.log(btn.textContent.includes('hide'))
       if(btn.textContent.includes('hide')){
         repliescontainer.innerHTML=''
         btn.textContent="view replies"
@@ -408,7 +419,7 @@
       }
 
       btn.textContent="hide replies"
-      axios.post('/replies',{
+      axios.post('/reply/showall',{
         commentId:commentId
       })
       .then(response=>{
@@ -419,7 +430,7 @@
           <div class="img w-8 aspect-square h-max bg-gray-500 rounded-full"></div>
           <div class="comment-dets w-full">
             <div class="flex ml-2 gap-1 items-center">
-              <h3 class="font-medium text-md text-zinc-700"><%=loggedUser.channel%></h3>
+              <h3 class="font-medium text-md text-zinc-700">abc</h3>
               <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
             </div>
             <p class="ml-2 text-sm">${reply.comment}</p>
