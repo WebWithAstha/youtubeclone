@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
+    <title>Channel Content</title>
+    <link rel="shortcut icon" href="https://www.youtube.com/s/desktop/050e6796/img/favicon.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -108,50 +108,50 @@
             </div>
             <div class="right w-[83vw] overflow-y-auto">
                 <h1 class="text-2xl font-medium p-5">Channel content</h1>
-                <div class="caetogary px-5 border-b border-b-zinc-200 w-full mt-5 flex gap-5 items-center">
+                <div class="category px-5 border-b border-b-zinc-200 w-full mt-5 flex gap-5 items-center">
                     <a href="/"><h1
                         class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
                         Home</h1></a>
-                    <h1
-                        class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
+                    <h1 onclick="showOnlyVideos(this)" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
                         Videos</h1>
-                    <h1
-                        class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
+                    <h1 onclick="showOnlyShorts(this)" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
                         Shorts</h1>
-                    <h1
-                        class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
+                    <h1 onclick="showOnlyPlaylists(this,'<%=loggedUser._id%>')" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
                         Playlist</h1>
                 </div>
                 <div class="filter">
                     <h1 class="py-2 flex items-center  border-b px-5"><i
                             class="ri-filter-3-line text-2xl text-zinc-400 mr-5"></i> Filter</h1>
-                    <div class="filterdVideo px-5">
+                    <div class="filteredVideo px-5">
                         <%videos.forEach(function(video,i){%>
                             <div class="video relative border-b py-3 flex justify-between">
-                                <h1>
-                                    <%=i+1%>
-                                </h1>
-                                <div class="video-desc flex gap-5">
+                                <div class="flex gap-24">
 
-                                    <a  href="/video/<%=video._id%>"
-                                        class="cursor-pointer border flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
-                                        <video class="h-full" muted  controlsList="nodownload" src="/uploads/videos/<%=video.videoName%>"></video>
-                                        <%if(video.thumbnail){%>
-                                            <div
-                                                class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
-                                                <img src="/uploads/images/<%=video.thumbnail%>"
-                                                    class="w-full h-full object-cover" alt="">
-                                            </div>
-                                            <%}%>
-                                        </a>
-
-                                    <div class="description w-[13vw]">
-                                        <h1 class="font-medium truncate leading-tight">
-                                            <%=video.title%>
-                                        </h1>
-                                        <p class="text-sm text-zinc-400">
-                                            <%= video.description.slice(0,70)+" ..." %>
-                                        </p>
+                                    <h1>
+                                        <%=i+1%>
+                                    </h1>
+                                    <div class="video-desc flex gap-5">
+    
+                                        <a  href="/video/<%=video._id%>"
+                                            class="cursor-pointer border flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
+                                            <video class="h-full" muted  controlsList="nodownload" src="/uploads/videos/<%=video.videoName%>"></video>
+                                            <%if(video.thumbnail){%>
+                                                <div
+                                                    class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
+                                                    <img src="/uploads/images/<%=video.thumbnail%>"
+                                                        class="w-full h-full object-cover" alt="">
+                                                </div>
+                                                <%}%>
+                                            </a>
+    
+                                        <div class="description w-[13vw]">
+                                            <h1 class="font-medium truncate leading-tight">
+                                                <%=video.title%>
+                                            </h1>
+                                            <p class="text-sm text-zinc-400">
+                                                <%= video.description.slice(0,70)+" ..." %>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <h1><%= new Date(video.uploadDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }) %></h1>
@@ -161,7 +161,7 @@
                                 <h1>
                                     <%=video.comments.length%> comments
                                 </h1>
-                                <a href="/delete/video/<%=video._id%>"><i
+                                <a href="/video/delete/<%=video._id%>"><i
                                         class="rounded-b-md hover:bg-zinc-100 cursor-pointer py-.5 px-2 text-zinc-700 bg-zinc-200 ri-delete-bin-2-line absolute bottom-4 right-1"></i></a>
                                 <i onclick="editBtnClickHandle('<%=video._id%>','<%=video.title%>','<%=video.description%>','<%=video.thumbnail%>','<%=video.videoName%>')"
                                     class="rounded-t-md hover:bg-zinc-100 cursor-pointer py-.5 px-2 text-zinc-700 bg-zinc-200 ri-edit-line absolute bottom-10 right-1"></i>
@@ -178,11 +178,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-
-
-        
-
-
         let dynamicForm;
 
         //--------------- minor onclick events
@@ -214,7 +209,7 @@
         function createForm(videoId) {
             dynamicForm = document.createElement('form')
             dynamicForm.className = "upload-pannel sm:h-2/3 h-4/5 sm:w-[50rem] w-full bg-zinc-100 flex flex-col relative"
-            dynamicForm.setAttribute('action', `/upload/details/${videoId}`)
+            dynamicForm.setAttribute('action', `/video/details/${videoId}`)
             dynamicForm.setAttribute('method', 'POST')
             dynamicForm.setAttribute('enctype','multipart/form-data')
         }
@@ -238,11 +233,11 @@
 
         function showCreatePlayistForm() {
             createForm()
-            dynamicForm.action = '/create/playlist'
+            dynamicForm.action = '/playlist/create'
             dynamicForm.setAttribute('enctype', '')
 
             let template=``
-            axios.post(`/videos`)
+            axios.post(`/video/all`)
             .then(response=>{
                 response.data.forEach(video=>{
                     template+=`
@@ -307,7 +302,6 @@
                 if (uploadType === 'video') {
                     uploadingAnimation()
                     uploadVideoFile('video');
-
                 } else if (uploadType === 'short') {
                     let video = document.createElement('video');
                     video.src = URL.createObjectURL(input.files[0]);
@@ -320,7 +314,6 @@
                         }
                     });
                 }
-
             } else {
                 document.querySelector('.upload-overlay .description').innerHTML += '<p id="alert"><i class="ri-alert-line text-red-600 mt-[3px]"></i> Invalid file format.</p>'
             }
@@ -336,7 +329,7 @@
             formData.append('type', `${uploadType}`);
 
 
-            fetch('/upload/video', {
+            fetch('/video/upload', {
                 method: 'POST',
                 body: formData
             }).then(raw => raw.json())
@@ -484,10 +477,51 @@
             }
         }
 
+        function showOnlyPlaylists(btn,id){
+            console.log(btn.parentNode.parentNode.querySelector('.filter .filteredVideo'))
+            axios.post(`/playlist/all/${id}`)
+            .then(response=>{
+                console.log(response.data)
+                btn.parentNode.parentNode.querySelector('.filter .filteredVideo').innerHTML=''
+                response.data.forEach((playlist,i)=>{
+                    btn.parentNode.parentNode.querySelector('.filter .filteredVideo').innerHTML+=`
+                    <div class="video relative border-b py-3 flex justify-between">
+                        <div class="flex gap-24">
+
+                                <h1>
+                                    ${i+1}
+                                </h1>
+                                <div class="video-desc flex gap-5">
+
+                                    <a href="/playlist/${playlist._id}"
+                                        class="cursor-pointer border flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
+                                        <video class="h-full bg-zinc-400" muted  controlsList="nodownload" src=""></video>
+                                        
+                                        </a>
+
+                                    <div class="description w-[13vw]">
+                                        <h1 class="font-medium truncate leading-tight">
+                                            ${playlist.title}
+                                        </h1>
+                                        <p class="text-sm text-zinc-400">
+                                            ${ playlist.description.slice(0,70)+" ..." }
+                                        </p>
+                                    </div>
+                                </div>
+                                </div>
+                                <h1>${ new Date(playlist.createdDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' })}</h1>
+                                <h1>
+                                    0 likes
+                                </h1>
+                                </div>
+                    `
+                    
+                })
+            })
+        }
 
         
     </script>
-    <script src="/javascripts/script.js"></script>
 
 </body>
 

@@ -1,4 +1,4 @@
-const videoModel = require('../routes/video.js')
+const videoModel = require('../models/videoModel.js')
 
 module.exports.timeSpanFromNow = (inputDate)=>{
 

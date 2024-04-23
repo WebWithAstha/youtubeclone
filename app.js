@@ -9,7 +9,7 @@ const mongoStorage = require('connect-mongo')
 
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const usersRouter = require('./models/userModel.js');
 
 const app = express();
 
