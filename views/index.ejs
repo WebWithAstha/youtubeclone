@@ -31,17 +31,13 @@
             <h2 class="cursor-pointer hover:bg-zinc-100 bg-zinc-200 px-3 py-1 rounded-md font-medium shrink-0">Jai Shree
                 Ram</h2>
         </div>
-        <div style="display: grid;
-        grid-template-columns: repeat(auto-fill,minmax(20rem,1fr));
-        max-width:100%;
-        " class="videos shrink-0 py-5 gap-4 overflow-y-auto h-[85vh] ">
+        <div class="videos w-full grid lg:grid-cols-3 grid-cols-2 py-5 gap-4 overflow-y-auto h-[85vh] ">
             <%shuffledVideos.forEach(function(video){%>
-                <a class="h-max" href="/video/<%=video._id%>" onmouseenter="videoMouseEnterHandle(this)"
-                    onmouseleave="videoMouseLeaveHandle(this)">
+                <a class="h-max" href="/video/<%=video._id%>">
                     <div class="video mb-1">
-                        <div onmouseenter="videoMouseEnterHandle(this)" onmouseleave="videoMouseLeaveHandle(this)"
+                        <div
                             class="cursor-pointer flex justify-center w-full rounded-xl h-56 bg-zinc-900 mb-2 relative overflow-hidden">
-                            <video class="h-full" ontimeupdate="pauseVideo(this)" muted src="/uploads/videos/<%=video.videoName%>"></video>
+                            <video class="h-full" muted src="/uploads/videos/<%=video.videoName%>"></video>
                             <%if(video.thumbnail){%>
                                 <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
                                     <img src="/uploads/images/<%=video.thumbnail%>" class="w-full h-full object-cover" alt="">

@@ -112,18 +112,18 @@
                     <a href="/"><h1
                         class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
                         Home</h1></a>
-                    <h1 onclick="showOnlyVideos(this)" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
+                    <h1 onclick="showAll(this,'video')" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
                         Videos</h1>
-                    <h1 onclick="showOnlyShorts(this)" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
+                    <h1 onclick="showAll(this,'short')" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
                         Shorts</h1>
-                    <h1 onclick="showOnlyPlaylists(this,'<%=loggedUser._id%>')" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
+                    <h1 onclick="showAll(this,'playlist')" class="font-semibold cursor-pointer text-md py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
                         Playlist</h1>
                 </div>
                 <div class="filter">
                     <h1 class="py-2 flex items-center  border-b px-5"><i
                             class="ri-filter-3-line text-2xl text-zinc-400 mr-5"></i> Filter</h1>
                     <div class="filteredVideo px-5">
-                        <%videos.forEach(function(video,i){%>
+                        <%mergedAndSorted.forEach(function(video,i){%>
                             <div class="video relative border-b py-3 flex justify-between">
                                 <div class="flex gap-24">
 
@@ -154,7 +154,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <h1><%= new Date(video.uploadDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }) %></h1>
+                                <h1><%= new Date(video.createdDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }) %></h1>
                                 <h1>
                                     <%=video.likes.length%> likes
                                 </h1>
@@ -303,6 +303,7 @@
                     uploadingAnimation()
                     uploadVideoFile('video');
                 } else if (uploadType === 'short') {
+                    console.log(uploadType)
                     let video = document.createElement('video');
                     video.src = URL.createObjectURL(input.files[0]);
                     video.addEventListener('loadedmetadata', function () {
@@ -477,43 +478,34 @@
             }
         }
 
-        function showOnlyPlaylists(btn,id){
+        function showAll(btn,type){
             console.log(btn.parentNode.parentNode.querySelector('.filter .filteredVideo'))
-            axios.post(`/playlist/all/${id}`)
+            axios.post(`/showall/${type}`,{userId:'<%=loggedUser._id%>'})
             .then(response=>{
                 console.log(response.data)
                 btn.parentNode.parentNode.querySelector('.filter .filteredVideo').innerHTML=''
-                response.data.forEach((playlist,i)=>{
+                response.data.forEach((video,i)=>{
                     btn.parentNode.parentNode.querySelector('.filter .filteredVideo').innerHTML+=`
-                    <div class="video relative border-b py-3 flex justify-between">
-                        <div class="flex gap-24">
-
-                                <h1>
-                                    ${i+1}
+                <div class="video relative border-b py-3 flex justify-between">
+                    <div class="flex gap-24">
+                            <h1>${i+1}</h1>
+                        <div class="video-desc flex gap-5">
+                            <a href="/${type === 'playlist'?'playlist':'video'}/${video._id}" class="cursor-pointer border flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
+                            <video class="h-full bg-zinc-400" muted  controlsList="nodownload" src=""></video>
+                            </a>
+                            <div class="description w-[13vw]">
+                                <h1 class="font-medium truncate leading-tight">
+                                ${video.title}
                                 </h1>
-                                <div class="video-desc flex gap-5">
-
-                                    <a href="/playlist/${playlist._id}"
-                                        class="cursor-pointer border flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
-                                        <video class="h-full bg-zinc-400" muted  controlsList="nodownload" src=""></video>
-                                        
-                                        </a>
-
-                                    <div class="description w-[13vw]">
-                                        <h1 class="font-medium truncate leading-tight">
-                                            ${playlist.title}
-                                        </h1>
-                                        <p class="text-sm text-zinc-400">
-                                            ${ playlist.description.slice(0,70)+" ..." }
-                                        </p>
-                                    </div>
-                                </div>
-                                </div>
-                                <h1>${ new Date(playlist.createdDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' })}</h1>
-                                <h1>
-                                    0 likes
-                                </h1>
-                                </div>
+                                <p class="text-sm text-zinc-400">
+                                ${video.description.length>70 ? video.description.slice(0,70)+" ..." :video.description }
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <h1>${ new Date(video.createdDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' })}</h1>
+                    <h1>0 likes</h1>
+                </div>
                     `
                     
                 })

@@ -29,7 +29,7 @@ const videoSchema = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'comment'
     }],
-    uploadDate:{
+    createdDate:{
         type: Date,
         default: Date.now
     },
