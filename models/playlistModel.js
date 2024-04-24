@@ -15,6 +15,18 @@ const playlistSchema = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'video'
     }],
+    likes:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'user'
+        }
+    ],
+    comments:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'comment'
+        }
+    ],
     visibility:{
         type:String,
         default:'public'
