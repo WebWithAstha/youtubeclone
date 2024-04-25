@@ -1,7 +1,6 @@
 <%include ./partials/header%>
 <div class="right h-[85vh] flex-1 relative px-6 overflow-y-auto">
 
-    <%shorts.forEach(short=>{%>
         <div ons class="short-container flex items-end justify-center py-3 mb-4">
             <div class="short-panel flex items-center justify-center w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
                 <img class="w-full object-cover " src="/uploads/images/<%=short.thumbnail%>" alt="">
@@ -33,7 +32,6 @@
                 <img src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj" alt="" class="w-10 object-cover rounded-lg aspect-square bg-zinc-800">
             </div>
         </div>
-        <%})%>
 
     <div class="short-container flex items-end justify-center mb-4">
         <div class="short-panel w-80 h-[80vh] bg-zinc-200">

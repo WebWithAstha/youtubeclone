@@ -387,10 +387,6 @@ router.get('/studio', async function (req, res, next) {
   res.render('studio.ejs', { leftSection: true, loggedUser, mergedAndSorted });
 });
 
-
-
-
-
 const uploadFileToBunnyCDN = (filePath, fileName) => {
   return new Promise(async (resolve, reject) => {
     const readStream = fs.createReadStream(filePath);
