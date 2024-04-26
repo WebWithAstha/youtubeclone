@@ -11,7 +11,8 @@ const GoogleStrategy = require('passport-google-oidc');
 const passport = require('passport')
 const fs = require('fs')
 const axios = require('axios');
-const utilsController = require('../controllers/utils_controller.js');
+// const utilsController = require('../controllers/utils_controller.js');
+const {timeSpanFromNow, getLatestContent,getAllContent } = require('../utils/utils.js');
 
 
 
@@ -49,23 +50,11 @@ passport.use(new GoogleStrategy({
 
 /* GET home page. */
 router.get('/', async function (req, res, next) {
-  const allVideos = await videoModel.find().populate('user')
-  const updatedVideos = allVideos.map(video => ({ ...video.toObject(), timespan: utilsController.timeSpanFromNow(video.createdDate) }))
-  function shuffle(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-    }
-    return array;
-  }
-  const shuffledVideos = shuffle(updatedVideos)
-
-
-
-  res.render('index.ejs', { leftSection: true, loggedUser: req.user, shuffledVideos });
+  const allContent = await getAllContent()
+  const allContentWithTime = allContent.map(video => ({ ...video.toObject(), timespan: timeSpanFromNow(video.createdDate) }))
+  res.render('index.ejs', { leftSection: true, loggedUser: req.user, shuffledVideos:allContentWithTime });
 });
+
 router.get('/login/federated/google', passport.authenticate('google'));
 
 router.get('/oauth2/redirect/google', passport.authenticate('google', {
@@ -78,10 +67,6 @@ router.get('/logout', function (req, res, next) {
     res.redirect('/');
   });
 });
-
-
-
-
 
 
 // ---------- video routes --------------------------------
@@ -299,8 +284,9 @@ router.post('/history/clearall', async function (req, res, next) {
 
 // rendering playlist page
 router.get('/playlist/:playlistId', async function (req, res, next) {
-  const playlist = await playlistModel.findOne({ id: req.params.playlistId })
-    .populate('user video')
+  const playlist = await playlistModel.findOne({ _id: req.params.playlistId })
+    .populate('user videos')
+    console.log(playlist)
   res.render('playlist.ejs', { leftSection: true, loggedUser: req.user, playlist });
 });
 
@@ -322,11 +308,14 @@ router.post('/playlist/create', async function (req, res, next) {
 
 router.post('/showall/:type', async function (req, res, next) {
   console.log(req.params.type)
-  if (req.params.type === 'playlist') {
+  if(req.params.type === 'content'){
+  const mergedAndSorted = await getLatestContent(req.body.userId)
+  res.status(200).json(mergedAndSorted)
+  }else if (req.params.type === 'playlist') {
     const playlists = await playlistModel.find({ user: req.body.userId })
     res.status(200).json(playlists)
-  }else{
-    const videos = await videoModel.find({user:req.body.userId ,type:req.params.type})
+  } else {
+    const videos = await videoModel.find({ user: req.body.userId, type: req.params.type })
     res.status(200).json(videos)
   }
 
@@ -363,8 +352,8 @@ router.get('/results', function (req, res, next) {
   res.render('results.ejs', { leftSection: true, loggedUser: req.user });
 });
 router.get('/shorts', async function (req, res, next) {
-  const shorts = await videoModel.find({type:'short'})
-  res.render('shorts.ejs', { leftSection: true,shorts, loggedUser: req.user });
+  const shorts = await videoModel.find({ type: 'short' })
+  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user });
 });
 router.get('/you', function (req, res, next) {
   res.render('you.ejs', { leftSection: true, loggedUser: req.user });
@@ -372,18 +361,14 @@ router.get('/you', function (req, res, next) {
 router.get('/channel/:userId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const user = await userModel.findOne({ _id: req.params.userId })
-  const videos = await videoModel.find({ user: req.params.userId })
-  res.render('profile.ejs', { leftSection: true, loggedUser, user, videos });
+  const allUserContent = await getLatestContent(user._id)
+  const allUserContentWithTime = allUserContent.map(video => ({ ...video.toObject(), timespan: timeSpanFromNow(video.createdDate) }))
+  res.render('profile.ejs', { leftSection: true, loggedUser, user, videos:allUserContentWithTime });
 });
 
 router.get('/studio', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username });
-  const videos = await videoModel.find({ user: loggedUser._id });
-  const latestVideos = await videoModel.find({ user:loggedUser._id }).sort({ createdDate: -1 });
-    const latestPlaylists = await playlistModel.find({ user:loggedUser._id }).sort({ createdDate: -1 });
-
-    const mergedAndSorted = [...latestVideos, ...latestPlaylists].sort((a, b) => b.createdDate - a.createdDate);
-
+  const mergedAndSorted = await getLatestContent(loggedUser._id)
   res.render('studio.ejs', { leftSection: true, loggedUser, mergedAndSorted });
 });
 

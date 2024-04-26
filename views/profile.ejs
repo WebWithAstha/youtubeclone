@@ -1,63 +1,82 @@
 <% include ./partials/header.ejs %>
-    <div class="right h-full flex-1 relative px-6">
+    <div class="right h-full flex-1 relative px-6 overflow-y-auto">
         <div class="about px-20 py-5 flex items-center gap-6">
             <div class="profileImg h-[10.5vw] rounded-full overflow-hidden aspect-square">
-                <img class="h-full w-full object-cover" src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj" alt="">
+                <img class="h-full w-full object-cover"
+                    src="https://yt3.googleusercontent.com/ytc/AIdro_lxymYXNITfuoAkr58fuQ1TCLZmjmHSG2IpYX20xw=s176-c-k-c0x00ffffff-no-rj"
+                    alt="">
             </div>
             <div class="details">
-                <h1 class="text-4xl font-bold mb-2"><%=user.username%></h1>
-                <p class="text-sm text-zinc-700 font-medium mb-2"><%=user.channel%></p>
+                <h1 class="text-4xl font-bold mb-2">
+                    <%=user.username%>
+                </h1>
+                <p class="text-sm text-zinc-700 font-medium mb-2">
+                    <%=user.channel%>
+                </p>
                 <%if(loggedUser._id.equals(user._id)){%>
-                    
-                    <p class="text-sm text-zinc-700 font-medium mb-4">More about this channel <i class="ri-arrow-right-s-line"></i></p>
-                    <button class="px-4 py-1.5 text-sm mr-2 captiliaze font-medium bg-zinc-200 rounded-3xl">Customise channel</button>
-                    <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage videos</button>
-                    
-                <%}%>
+
+                    <p class="text-sm text-zinc-700 font-medium mb-4">More about this channel <i
+                            class="ri-arrow-right-s-line"></i></p>
+                    <button class="px-4 py-1.5 text-sm mr-2 captiliaze font-medium bg-zinc-200 rounded-3xl">Customise
+                        channel</button>
+                    <button class="px-4 py-1.5 text-sm captiliaze font-medium bg-zinc-200 rounded-3xl">manage
+                        videos</button>
+
+                    <%}%>
             </div>
         </div>
         <div class="caetogary px-20 border-b border-b-zinc-200 w-full mb-4 flex gap-5 items-center">
-            <h1 class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Home</h1>
-            <h1 class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Videos</h1>
-            <h1 class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">Playlist</h1>
+            <h1
+                class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-black">
+                Home</h1>
+            <h1
+                class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
+                Videos</h1>
+            <h1
+                class="font-medium text-lg py-2 border-b w-fit border-b-2 px-1 hover:border-b-zinc-900 border-b-transparent">
+                Playlist</h1>
             <i class="ri-search-line text-lg text-zinc-500"></i>
-            <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3" type="text">
+            <input class="outline-none py-[.6vw] focus:border-b-zinc-900 border-b-transparent border-b-2 mt-auto -ml-3"
+                type="text">
         </div>
-        <div class="videos px-20 relative grid grid-cols-3 gap-5 overflow-y-auto h-[85vh] py-2">
+        <div class="videos px-20 relative grid grid-cols-3 gap-5 h-max py-2">
             <%videos.forEach(video=>{%>
-                
-                <div class=" mb-1 video ">
-                    
-                    <div class="rounded-xl w-full relative overflow-hidden h-56 bg-zinc-200 mb-2">
-                        <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
-                            <img src="/uploads/images/<%=video.thumbnail%>" class="w-full h-full object-cover" alt="">
-                        </div>
-                    </div>
-                    <h2 class="leading-tight"><%=video.title%></h2>
-                    <h4 class="text-zinc-500 text-sm"><%=user.channel%></h4>
-                    <div class="flex gap-1 items-center text-zinc-500">
-                        <h4 class="text-sm"><%=video.views.length%> views</h4>
-                        <i class="ri-circle-fill text-[4px]"></i>
-                        <h4 class="text-sm">23 hours ago</h4>
-                    </div>
-                </div>
-            <%})%>
-            <div class=" mb-1 playlist relative">
-                <div class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 "></div>
-                <div class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 "></div>
-                <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="">
-                </video>
 
-                <h2 class="leading-tight">Attitude | Stand-up Comedy by Ravi Gupta Lorem ipsum dolor sit amet
-                    consectetur adipisicing elit.</h2>
-                <h4 class="text-zinc-500 text-sm">channel name</h4>
-                <div class="flex gap-1 items-center text-zinc-500">
-                    <h4 class="text-sm">15 views</h4>
-                    <i class="ri-circle-fill text-[4px]"></i>
-                    <h4 class="text-sm">23 hours ago</h4>
+                <div class=" mb-1 video ">
+
+                    <div class="rounded-xl w-full relative h-56 bg-zinc-200 mb-2">
+                            <%if(!video.type){%>
+                                <div
+                                    class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 ">
+                                </div>
+                                <div
+                                    class="h-56 w-[98%] rounded-xl -top-1  absolute left-1/2 -translate-x-1/2 bg-zinc-400 ">
+                                </div>
+                                <%}%>
+                                <video class="rounded-xl relative h-56 bg-zinc-200 mb-2" src="">
+                                </video>
+
+                    </div>
+                    <h2 class="leading-tight">
+                        <%=video.title%>
+                    </h2>
+                    <h4 class="text-zinc-500 text-sm">
+                        <%=user.channel%>
+                    </h4>
+                    <div class="flex gap-1 items-center text-zinc-500">
+                        <%if(video.views){%>
+                            <h4 class="text-sm">
+                                <%=video.views.length%> views
+                            </h4>
+                            <i class="ri-circle-fill text-[4px]"></i>
+                            <%}%>
+                            <h4 class="text-sm"><%=video.timespan%> ago</h4>
+
+                    </div>
                 </div>
-            </div>
-           
+                <%})%>
+            
+
 
 
         </div>
@@ -65,6 +84,7 @@
     </div>
 
 
+ 
+
 
     <% include ./partials/footer.ejs %>
- 
