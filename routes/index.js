@@ -13,6 +13,7 @@ const fs = require('fs')
 const axios = require('axios');
 // const utilsController = require('../controllers/utils_controller.js');
 const {timeSpanFromNow, getLatestContent,getAllContent } = require('../utils/utils.js');
+const {categorizeVideos } = require('../utils/shortsDate.js');
 
 
 
@@ -266,7 +267,10 @@ router.get('/history', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
     .populate('watchedVideo')
     .populate({ path: 'watchedVideo', populate: 'user' })
-  res.render('history.ejs', { leftSection: true, loggedUser });
+
+    const videos = await videoModel.find()
+    const allHistory = await categorizeVideos(loggedUser.watchedVideo);
+  res.render('history.ejs', { leftSection: true, loggedUser,allHistory });
 });
 router.post('/history/remove/:videoId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
@@ -353,7 +357,20 @@ router.get('/results', function (req, res, next) {
 });
 router.get('/shorts', async function (req, res, next) {
   const shorts = await videoModel.find({ type: 'short' })
-  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user });
+  const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${shorts[0].videoName}?accessKey=${STREAM_KEY}`
+  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user,short:shorts[0],index:1,shortUrl });
+});
+router.get('/shorts/:index', async function (req, res, next) {
+  const shorts = await videoModel.find({ type: 'short' })
+  
+  let index;  
+  if(shorts.length-1 === Number(req.params.index)) {
+    index = Number(req.params.index);
+  }else{
+    index = Number(req.params.index) + 1;
+  }
+  const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${short[index].videoName}?accessKey=${STREAM_KEY}`
+  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user,short:shorts[index],index,shortUrl });
 });
 router.get('/you', function (req, res, next) {
   res.render('you.ejs', { leftSection: true, loggedUser: req.user });

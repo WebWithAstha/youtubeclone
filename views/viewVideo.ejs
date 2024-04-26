@@ -196,7 +196,6 @@
     </div>
   </div>
 
-  <!-- <script src="/javascripts/player.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
     integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -205,13 +204,7 @@
     crossorigin='anonymous' referrerpolicy='no-referrer'></script>
 
   <script>
-    let bottom = document.querySelector('.bottom')
-    bottom.style.overflowY = "auto"
-    window.addEventListener('resize', function () {
-      if (document.querySelector('body').getBoundingClientRect().width < 768) {
-        bottom.style.flexDirection = "column"
-      }
-    })
+    document.querySelector('.bottom').style.overflowY = 'scroll';
 
 
     document.querySelector('video').play()
@@ -236,7 +229,7 @@
     }
 
     function toggleLike(btn, videoId) {
-      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
 
       const likeIcon = btn.querySelector('i')
       const dislikeIcon = document.querySelector('#dislike-video-btn i')
@@ -255,7 +248,7 @@
     }
 
     function toggleDislike(btn, videoId) {
-      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
 
       const dislikeIcon = btn.querySelector('i')
       const likeIcon = document.querySelector('#like-video-btn i')
@@ -274,7 +267,7 @@
     }
 
     function toggleSubcribe(btn, userId) {
-      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
 
       axios.post(`/subscribe/user/${userId}`)
 
@@ -299,7 +292,7 @@
     }
 
     function toggleWatchLater(btn, videoId) {
-      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
 
       btn.querySelector("i").classList.toggle("ri-time-line")
       btn.querySelector("i").classList.toggle("ri-check-fill")
@@ -309,7 +302,7 @@
   
 
     function comment(btn, videoId) {
-      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
       let inp = btn.parentNode.querySelector('input')
       if(inp.value==='')return
       axios.post(`/video/comment/${videoId}`, {
@@ -346,7 +339,7 @@
 
 
     function showReplyBox(elem,commentId){
-      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
 
 
       if(document.querySelector(`#reply${commentId}`))return;
@@ -377,7 +370,7 @@
     
 
     function reply(btn,commentId) {
-      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
       let inp = btn.parentNode.parentNode.querySelector('input')
       if(inp.value==='')return
       let replies=btn.parentNode.parentNode.parentNode.parentNode.querySelector('.replies')
@@ -408,7 +401,7 @@
     }
 
     function showReplies(btn,commentId) {
-      if(!'<%=loggedUser%>')return alert('Please sign in!!')
+      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
 
       let repliescontainer = btn.parentNode.querySelector('.replies')
       if(btn.textContent.includes('hide')){

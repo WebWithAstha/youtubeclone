@@ -37,7 +37,14 @@
                     <div class="video mb-1">
                         <div
                             class="cursor-pointer flex justify-center w-full rounded-xl h-56 bg-zinc-900 mb-2 relative">
+                            <%if(video.thumbnail){%>
+                                <div class="thumbnail absolute top-0 left-0 w-full h-full z-[9] overflow-hidden bg-zinc-300 rounded-xl">
+                                    <img src="/uploads/images/<%=video.thumbnail%>"
+                                        class="w-full h-full object-cover" alt="">
+                                </div>
+                                <%}%>
                             <%if(!video.type){%>
+                               
                                 <div
                                     class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 ">
                                 </div>
