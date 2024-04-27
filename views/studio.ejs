@@ -146,9 +146,9 @@
                                             <video class="h-full" muted  controlsList="nodownload" src="/uploads/videos/<%=video.videoName%>"></video>
                                             <%if(video.thumbnail){%>
                                                 <div
-                                                    class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl">
+                                                    class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-800 flex items-center justify-center rounded-xl">
                                                     <img src="/uploads/images/<%=video.thumbnail%>"
-                                                        class="w-full h-full object-cover" alt="">
+                                                        class="<%=video.type==='short'?'w-12':'w-full'%> h-full object-cover" alt="">
                                                 </div>
                                                 <%}%>
                                             </a>
@@ -172,7 +172,7 @@
                                 </h1>
                                 <a href="/video/delete/<%=video._id%>"><i
                                         class="rounded-b-md hover:bg-zinc-100 cursor-pointer py-.5 px-2 text-zinc-700 bg-zinc-200 ri-delete-bin-2-line absolute bottom-4 right-1"></i></a>
-                                <i onclick="editBtnClickHandle('<%=video._id%>','<%=video.title%>','<%=video.description%>','<%=video.thumbnail%>','<%=video.videoName%>')"
+                                <i onclick="editBtnClickHandle('<%=video._id%>','<%=video.title%>','<%=video.description%>','<%=video.videoName%>')"
                                     class="rounded-t-md hover:bg-zinc-100 cursor-pointer py-.5 px-2 text-zinc-700 bg-zinc-200 ri-edit-line absolute bottom-10 right-1"></i>
                             </div>
                             <%})%>
@@ -407,7 +407,7 @@
                 })
         }
 
-        function editBtnClickHandle(videoId, title, description, thumbnail, videoName) {
+        function editBtnClickHandle(videoId, title, description, videoName) {
             createForm(videoId)
             dynamicForm.innerHTML = `
                     <div class="flex justify-between px-4 py-2">
@@ -428,20 +428,15 @@
                                     name="description" id="" placeholder="Tell viewers about your video.">${description}</textarea>
                             </div>
 
-                            <h2 class="text-md font-medium mt-7">Thumbnail</h2>
-                            <input onchange="thumbnailInputChangeHandle(this)" type="file" accept="image/*" hidden name="thumbnail" id="thumbnailFileInput">
-                            <div onclick="selectThumbnailFile()" class="thumbnail rounded-t-md max-w-40 mt-2 aspect-video bg-zinc-400">
-                                <img src="/uploads/images/add.jpg" class="w-full object-cover h-full" alt="">
-                            </div>
                             <h2 class="text-md font-medium mt-7 mb-2">Visibility</h2>
                             <div class="border border-zinc-700 rounded-md py-2 px-3">
                                 <div class="flex gap-2 items-center px-1 cursor-pointer w-max mb-2">
-                                    <input type="radio" name="visibility" value="private" checked
+                                    <input type="radio" name="visibility" value="private"
                                         class="bg-yellow-100 cursor-pointer scale-125">
                                     <label for="" class="cursor-pointer text-sm">Private</label>
                                 </div>
                                 <div class="flex gap-2 items-center px-1 cursor-pointer w-max">
-                                    <input type="radio" name="visibility" value="public"
+                                    <input type="radio" name="visibility" value="public" checked
                                         class="bg-yellow-100 cursor-pointer scale-125">
                                     <label for="" class="cursor-pointer text-sm">Public</label>
                                 </div>
@@ -496,7 +491,16 @@
             axios.post(`/showall/${type}`,{userId:'<%=loggedUser._id%>'})
             .then(response=>{
                 btn.parentNode.parentNode.querySelector('.filter .filteredVideo').innerHTML=''
+                let thumbnail =''
                 response.data.forEach((video,i)=>{
+                    if(video.thumbnail){
+                                thumbnail=`
+                                <div class="thumbnail absolute top-0 left-0 w-full h-full z-[9] overflow-hidden bg-zinc-800 flex justify-center items-center rounded-xl">
+                                    <img src="/uploads/images/${video.thumbnail}"
+                                        class="${video.type==='short'?'w-12':'w-full'} h-full object-cover" alt="">
+                                </div>
+                                `
+                            }
                     if(video.type==='short'||video.type==='video'){
                         btn.parentNode.parentNode.querySelector('.filter .filteredVideo').innerHTML+=`
                         <div class="video relative border-b py-3 flex justify-between">
@@ -506,9 +510,11 @@
                                         ${i+1}
                                     </h1>
                                     <div class="video-desc flex gap-5">
-                                        <a  href="/video/${video._id}"
+                                        
+                                        <a href="/${video.type ? 'video/'+video._id:'playlist/'+video._id}"
                                             class="cursor-pointer border flex justify-center w-40 aspect-video h-max rounded-xl bg-zinc-900 mb-2 relative overflow-hidden">
                                             <video class="h-full bg-zinc-600" muted  controlsList="nodownload" src=""></video>
+                                            ${thumbnail}
                                             </a>
     
                                         <div class="description w-[13vw]">
@@ -530,7 +536,7 @@
                                 </h1>
                                 <a href="/video/delete/${video._id}"><i
                                         class="rounded-b-md hover:bg-zinc-100 cursor-pointer py-.5 px-2 text-zinc-700 bg-zinc-200 ri-delete-bin-2-line absolute bottom-4 right-1"></i></a>
-                                <i onclick="editBtnClickHandle('${video._id}','${video.title}','${video.description}','${video.thumbnail}','${video.videoName}')"
+                                <i onclick="editBtnClickHandle('${video._id}','${video.title}','${video.description}','${video.videoName}')"
                                     class="rounded-t-md hover:bg-zinc-100 cursor-pointer py-.5 px-2 text-zinc-700 bg-zinc-200 ri-edit-line absolute bottom-10 right-1"></i>
                             </div>
                                 `

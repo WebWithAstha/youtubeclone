@@ -42,9 +42,16 @@
         <div class="videos px-20 relative grid grid-cols-3 gap-5 h-max py-2">
             <%videos.forEach(video=>{%>
 
+                <a href="/<%=video.type?'video/'+video._id:'playlist/'+video._id%>">
                 <div class=" mb-1 video ">
 
                     <div class="rounded-xl w-full relative h-56 bg-zinc-200 mb-2">
+                        <%if(video.thumbnail){%>
+                            <div class="thumbnail absolute top-0 left-0 flex items-center justify-center w-full h-full z-[9] overflow-hidden bg-zinc-800 rounded-xl">
+                                <img src="/uploads/images/<%=video.thumbnail%>"
+                                    class="<%=video.type==='short'?'w-32':'w-full'%> h-full object-cover" alt="">
+                            </div>
+                            <%}%>   
                             <%if(!video.type){%>
                                 <div
                                     class="h-56 w-[96%] rounded-xl -top-2  absolute left-1/2 -translate-x-1/2 bg-zinc-300 ">
@@ -74,6 +81,7 @@
 
                     </div>
                 </div>
+                </a>
                 <%})%>
             
 
