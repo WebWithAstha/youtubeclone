@@ -12,8 +12,8 @@ const passport = require('passport')
 const fs = require('fs')
 const axios = require('axios');
 // const utilsController = require('../controllers/utils_controller.js');
-const {timeSpanFromNow, getLatestContent,getAllContent } = require('../utils/utils.js');
-const {categorizeVideos } = require('../utils/shortsDate.js');
+const { timeSpanFromNow, getLatestContent, getAllContent } = require('../utils/utils.js');
+const { categorizeVideos } = require('../utils/shortsDate.js');
 
 
 
@@ -53,7 +53,7 @@ passport.use(new GoogleStrategy({
 router.get('/', async function (req, res, next) {
   const allContent = await getAllContent()
   const allContentWithTime = allContent.map(video => ({ ...video.toObject(), timespan: timeSpanFromNow(video.createdDate) }))
-  res.render('index.ejs', { leftSection: true, loggedUser: req.user, shuffledVideos:allContentWithTime });
+  res.render('index.ejs', { leftSection: true, loggedUser: req.user, shuffledVideos: allContentWithTime });
 });
 
 router.get('/login/federated/google', passport.authenticate('google'));
@@ -101,11 +101,12 @@ router.get('/video/:videoid', async function (req, res, next) {
       video.views.push(loggedUser._id)
       await video.save()
     }
-    if (loggedUser.watchedVideo.indexOf(video._id) !== -1) {
-      loggedUser.watchedVideo.splice(loggedUser.watchedVideo.indexOf(video._id), 1)
+    const alreadyWatchedIndex = loggedUser.watchedVideo.findIndex(item => item.video.equals(video._id));
+    if (alreadyWatchedIndex !== -1) {
+      loggedUser.watchedVideo.splice(alreadyWatchedIndex, 1);
     }
-    loggedUser.watchedVideo.push(video._id)
-    await loggedUser.save()
+    loggedUser.watchedVideo.push({ video: video._id });
+    await loggedUser.save();
   }
 
   res.render('viewVideo.ejs', { leftSection: false, loggedUser, video, videoUrl });
@@ -266,11 +267,11 @@ router.post('/reply/showall', async function (req, res, next) {
 router.get('/history', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
     .populate('watchedVideo')
-    .populate({ path: 'watchedVideo', populate: 'user' })
+    .populate({ path: 'watchedVideo', populate: 'video' })
 
-    const videos = await videoModel.find()
-    const allHistory = await categorizeVideos(loggedUser.watchedVideo);
-  res.render('history.ejs', { leftSection: true, loggedUser,allHistory });
+  const videos = await videoModel.find()
+  const allHistory = await categorizeVideos(loggedUser.watchedVideo);
+  res.render('history.ejs', { leftSection: true, loggedUser, allHistory });
 });
 router.post('/history/remove/:videoId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
@@ -290,7 +291,7 @@ router.post('/history/clearall', async function (req, res, next) {
 router.get('/playlist/:playlistId', async function (req, res, next) {
   const playlist = await playlistModel.findOne({ _id: req.params.playlistId })
     .populate('user videos')
-    console.log(playlist)
+  console.log(playlist)
   res.render('playlist.ejs', { leftSection: true, loggedUser: req.user, playlist });
 });
 
@@ -312,10 +313,10 @@ router.post('/playlist/create', async function (req, res, next) {
 
 router.post('/showall/:type', async function (req, res, next) {
   console.log(req.params.type)
-  if(req.params.type === 'content'){
-  const mergedAndSorted = await getLatestContent(req.body.userId)
-  res.status(200).json(mergedAndSorted)
-  }else if (req.params.type === 'playlist') {
+  if (req.params.type === 'content') {
+    const mergedAndSorted = await getLatestContent(req.body.userId)
+    res.status(200).json(mergedAndSorted)
+  } else if (req.params.type === 'playlist') {
     const playlists = await playlistModel.find({ user: req.body.userId })
     res.status(200).json(playlists)
   } else {
@@ -358,19 +359,19 @@ router.get('/results', function (req, res, next) {
 router.get('/shorts', async function (req, res, next) {
   const shorts = await videoModel.find({ type: 'short' })
   const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${shorts[0].videoName}?accessKey=${STREAM_KEY}`
-  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user,short:shorts[0],index:1,shortUrl });
+  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user, short: shorts[0], index: 1, shortUrl });
 });
 router.get('/shorts/:index', async function (req, res, next) {
   const shorts = await videoModel.find({ type: 'short' })
-  
-  let index;  
-  if(shorts.length-1 === Number(req.params.index)) {
+
+  let index;
+  if (shorts.length - 1 === Number(req.params.index)) {
     index = Number(req.params.index);
-  }else{
+  } else {
     index = Number(req.params.index) + 1;
   }
-  const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${short[index].videoName}?accessKey=${STREAM_KEY}`
-  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user,short:shorts[index],index,shortUrl });
+  const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${shorts[index].videoName}?accessKey=${STREAM_KEY}`
+  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user, short: shorts[index], index, shortUrl });
 });
 router.get('/you', function (req, res, next) {
   res.render('you.ejs', { leftSection: true, loggedUser: req.user });
@@ -380,7 +381,7 @@ router.get('/channel/:userId', async function (req, res, next) {
   const user = await userModel.findOne({ _id: req.params.userId })
   const allUserContent = await getLatestContent(user._id)
   const allUserContentWithTime = allUserContent.map(video => ({ ...video.toObject(), timespan: timeSpanFromNow(video.createdDate) }))
-  res.render('profile.ejs', { leftSection: true, loggedUser, user, videos:allUserContentWithTime });
+  res.render('profile.ejs', { leftSection: true, loggedUser, user, videos: allUserContentWithTime });
 });
 
 router.get('/studio', async function (req, res, next) {

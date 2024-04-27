@@ -15,9 +15,9 @@ exports.categorizeVideos = async (allWatchedVideos)=>{
     };
 
     // Iterate over each watched video
-    allWatchedVideos.forEach(video => {
+    allWatchedVideos.forEach(videoObj => {
         // Determine the category based on createdDate
-        const createdDate = new Date(video.createdDate);
+        const createdDate = new Date(videoObj.watchedAt);
         let category;
         if (createdDate.toDateString() === today.toDateString()) {
             category = "today";
@@ -28,10 +28,10 @@ exports.categorizeVideos = async (allWatchedVideos)=>{
         }
 
         // Determine the type of video
-        if (video.type === "short") {
-            categorizedVideos[category].shorts.push(video);
+        if (videoObj.video.type === "short") {
+            categorizedVideos[category].shorts.push(videoObj.video);
         } else {
-            categorizedVideos[category].videos.push(video);
+            categorizedVideos[category].videos.push(videoObj.video);
         }
     });
     console.log(categorizedVideos)

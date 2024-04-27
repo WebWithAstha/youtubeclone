@@ -1,6 +1,20 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/youtubeclone')
 
+
+const watchedVideoSchema = new mongoose.Schema({
+  video: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'video' // 'Video' ko aap apne actual model ka naam se replace karen
+  },
+  watchedAt: {
+      type: Date,
+      default: Date.now
+  }
+});
+
+
+
 const userSchema = mongoose.Schema({
   username: String,
   profileImg: {
@@ -14,12 +28,7 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  watchedVideo: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'video'
-    }
-  ],
+  watchedVideo: [watchedVideoSchema],
   watchLater: [
     {
       type: mongoose.Schema.Types.ObjectId,
