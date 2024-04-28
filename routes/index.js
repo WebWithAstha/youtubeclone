@@ -269,8 +269,8 @@ router.get('/history', async function (req, res, next) {
     .populate('watchedVideo')
     .populate({ path: 'watchedVideo', populate: 'video' })
 
-  const videos = await videoModel.find()
   const allHistory = await categorizeVideos(loggedUser.watchedVideo);
+  
   res.render('history.ejs', { leftSection: true, loggedUser, allHistory });
 });
 router.post('/history/remove/:videoId', async function (req, res, next) {
