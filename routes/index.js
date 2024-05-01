@@ -14,6 +14,8 @@ const axios = require('axios');
 // const utilsController = require('../controllers/utils_controller.js');
 const { timeSpanFromNow, getLatestContent, getAllContent } = require('../utils/utils.js');
 const { categorizeVideos } = require('../utils/shortsDate.js');
+const { populate } = require('dotenv');
+const { log } = require('console');
 
 
 
@@ -75,7 +77,6 @@ router.get('/logout', function (req, res, next) {
 // opening one video
 router.get('/video/:videoid', async function (req, res, next) {
   let loggedUser = req.user
-  console.log(loggedUser)
   const video = await videoModel.findById(req.params.videoid).populate('user')
     .populate({
       path: 'comments',
@@ -117,7 +118,6 @@ router.get('/video/:videoid', async function (req, res, next) {
 router.post('/video/all', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
   const videos = await videoModel.find({ user: loggedUser._id })
-  console.log(videos)
   res.status(200).json(videos)
 });
 
@@ -167,7 +167,6 @@ router.get('/video/delete/:videoId', async function (req, res, next) {
 
 // liking the video
 router.post('/video/like/:videoId', async function (req, res, next) {
-  console.log("hey")
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ _id: req.params.videoId })
   if (video.likes.indexOf(loggedUser._id) === -1) {
@@ -182,22 +181,22 @@ router.post('/video/like/:videoId', async function (req, res, next) {
   }
   await video.save()
   await loggedUser.save()
-  console.log(video.likes, video.likes.length)
   res.status(200).json(video.likes.length)
 })
 
-// disliking the video
 router.post('/video/dislike/:videoId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ _id: req.params.videoId })
   if (video.dislikes.indexOf(loggedUser._id) === -1) {
     video.dislikes.push(loggedUser._id)
-    if (video.likes.indexOf(loggedUser._id) !== -1) {
+    if (!(video.likes.indexOf(loggedUser._id) === -1)) {
       video.likes.splice(video.likes.indexOf(loggedUser._id), 1)
+      loggedUser.likedVideo.splice(loggedUser.likedVideo.indexOf(video._id), 1)
     }
   } else {
     video.dislikes.splice(video.dislikes.indexOf(loggedUser._id), 1)
   }
+  await loggedUser.save()
   await video.save()
   res.status(200).json(video.likes.length)
 })
@@ -270,7 +269,7 @@ router.get('/history', async function (req, res, next) {
     .populate({ path: 'watchedVideo', populate: 'video' })
 
   const allHistory = await categorizeVideos(loggedUser.watchedVideo);
-  
+
   res.render('history.ejs', { leftSection: true, loggedUser, allHistory });
 });
 router.post('/history/remove/:videoId', async function (req, res, next) {
@@ -291,7 +290,6 @@ router.post('/history/clearall', async function (req, res, next) {
 router.get('/playlist/:playlistId', async function (req, res, next) {
   const playlist = await playlistModel.findOne({ _id: req.params.playlistId })
     .populate('user videos')
-  console.log(playlist)
   res.render('playlist.ejs', { leftSection: true, loggedUser: req.user, playlist });
 });
 
@@ -312,7 +310,6 @@ router.post('/playlist/create', async function (req, res, next) {
 
 
 router.post('/showall/:type', async function (req, res, next) {
-  console.log(req.params.type)
   if (req.params.type === 'content') {
     const mergedAndSorted = await getLatestContent(req.body.userId)
     res.status(200).json(mergedAndSorted)
@@ -348,7 +345,9 @@ router.post('/subscribe/user/:userId', async function (req, res, next) {
 
 // showing all subscribtions
 router.get('/subscriptions', async function (req, res, next) {
-  res.render('subscriptions.ejs', { leftSection: true, loggedUser: req.user });
+  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
+    .populate('subscriptions')
+  res.render('subscriptions.ejs', { leftSection: true, loggedUser: req.user, loggedUser });
 });
 
 
@@ -373,8 +372,16 @@ router.get('/shorts/:index', async function (req, res, next) {
   const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${shorts[index].videoName}?accessKey=${STREAM_KEY}`
   res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user, short: shorts[index], index, shortUrl });
 });
-router.get('/you', function (req, res, next) {
-  res.render('you.ejs', { leftSection: true, loggedUser: req.user });
+router.get('/you', async function (req, res, next) {
+  let loggedUser = req.user
+  if (loggedUser) {
+    loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
+      .populate('watchedVideo', 'likedVideo', 'watchLater')
+      .populate({ path: 'likedVideo', populate: 'user' })
+      .populate({ path: 'watchedVideo', populate: { path: 'video', populate: 'user' } })
+  }
+
+  res.render('you.ejs', { leftSection: true, loggedUser });
 });
 router.get('/channel/:userId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
