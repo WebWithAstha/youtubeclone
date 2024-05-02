@@ -105,7 +105,7 @@
                 <div class="left h-full overflow-y-auto w-max lg:w-60 shrink-0 py-1 border-b-1">
                     <div class="border-b-[1px] px-3 py-2">
                         <a href="/">
-                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2 bg-zinc-200">
+                            <div id="home" class="focused mb-1 flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2 bg-zinc-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="30"
                                     viewBox="0 0 24 24" width="24" focusable="false"
                                     style="pointer-events: none; display: block; height: 100%;">
@@ -117,7 +117,7 @@
                             </div>
                         </a>
                         <a href="/shorts">
-                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                            <div id="shorts" class="mb-1 flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"
                                     focusable="false"
                                     style="pointer-events: none; display: inline-block;  height: 100%;">
@@ -129,7 +129,7 @@
                             </div>
                         </a>
                         <a href="/subscriptions">
-                            <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                            <div id="subscriptions" class="mb-1 flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24"
                                     viewBox="0 0 24 24" width="24" focusable="false"
                                     style="pointer-events: none; display: inline-block;  height: 100%;">
@@ -145,32 +145,32 @@
 
                         <div class="border-b-[1px] px-3 py-2">
                             <a href="/you">
-                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                <div id="you" class="mb-1 flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
                                     <h2 class="font-semibold text-md">You</h2>
                                     <i class="ri-arrow-right-s-line"></i>
                                 </div>
                             </a>
                             
                             <a href="/channel/<%=loggedUser.id%>">
-                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                <div id="channel" class="mb-1 flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
                                     <i class="ri-account-box-line text-xl"></i>
                                     <h2 class="md:block hidden">Channel</h2>
                                 </div>
                             </a>
                             <a href="/history">
-                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                <div id="history" class="mb-1 flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
                                     <i class="ri-history-line text-xl"></i>
                                     <h2 class="md:block hidden">History</h2>
                                 </div>
                             </a>
                             <a href="/studio" target="_blank" title="YouTube Studio">
-                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                                <div id="studio" class="mb-1 flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
                                     <i class="ri-video-line text-xl"></i>
                                     <h2 class="md:block hidden">Your Videos</h2>
                                 </div>
                             </a>
-                            <a href="/playlist/some">
-                                <div class="flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
+                            <a href="/watchlater">
+                                <div id="watchlater" class="mb-1 flex hover:bg-zinc-200 items-center rounded-lg gap-6 py-1.5 px-2">
                                     <i class="ri-time-line text-xl"></i>
                                     <h2 class="md:block hidden">Watch Later</h2>
                                 </div>

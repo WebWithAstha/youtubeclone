@@ -12,10 +12,9 @@ const passport = require('passport')
 const fs = require('fs')
 const axios = require('axios');
 // const utilsController = require('../controllers/utils_controller.js');
-const { timeSpanFromNow, getLatestContent, getAllContent } = require('../utils/utils.js');
+const { timeSpanFromNow, getLatestContent, getAllContent,subscribe } = require('../utils/utils.js');
 const { categorizeVideos } = require('../utils/shortsDate.js');
 const { populate } = require('dotenv');
-const { log } = require('console');
 
 
 
@@ -77,6 +76,7 @@ router.get('/logout', function (req, res, next) {
 // opening one video
 router.get('/video/:videoid', async function (req, res, next) {
   let loggedUser = req.user
+  let isLogged = false
   const video = await videoModel.findById(req.params.videoid).populate('user')
     .populate({
       path: 'comments',
@@ -94,8 +94,8 @@ router.get('/video/:videoid', async function (req, res, next) {
       }
     })
   const videoUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${video.videoName}?accessKey=${STREAM_KEY}`
-
   if (loggedUser) {
+    isLogged = true
     loggedUser = await userModel.findOne({ username: req.user.username })
 
     if (video.views.indexOf(loggedUser._id) === -1) {
@@ -110,7 +110,10 @@ router.get('/video/:videoid', async function (req, res, next) {
     await loggedUser.save();
   }
 
-  res.render('viewVideo.ejs', { leftSection: false, loggedUser, video, videoUrl });
+  const videos = await videoModel.find({ _id: { $ne: req.params.videoid } });
+
+
+  res.render('viewVideo.ejs', { leftSection: false, loggedUser, video, videoUrl,isLogged,videos });
 
 });
 
@@ -157,8 +160,6 @@ router.get('/video/delete/:videoId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username });
   const video = await videoModel.findOneAndDelete({ _id: req.params.videoId })
   fs.readdir('./public/uploads', { withFileTypes: true }, (err, files) => {
-    fs.unlink('./public/uploads/videos/' + video.videoName, (err) => {
-    })
     fs.unlink('./public/uploads/images/' + video.thumbnail, (err) => {
     })
   })
@@ -272,11 +273,28 @@ router.get('/history', async function (req, res, next) {
 
   res.render('history.ejs', { leftSection: true, loggedUser, allHistory });
 });
-router.post('/history/remove/:videoId', async function (req, res, next) {
+
+
+router.get('/watchlater', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
-  loggedUser.watchedVideo.splice(loggedUser.watchedVideo.indexOf(req.params.videoId), 1)
-  await loggedUser.save()
-  res.status(200).json('video removed from history successfully.');
+    .populate('watchLater')
+  res.render('watchlater.ejs', { leftSection: true, loggedUser });
+});
+router.post('/history/remove/:videoId', async function (req, res, next) {
+  try {
+    const loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
+    const videoToRemoveIndex = loggedUser.watchedVideo.findIndex(entry => entry.video.toString() === req.params.videoId);
+    
+    if (videoToRemoveIndex !== -1) {
+      loggedUser.watchedVideo.splice(videoToRemoveIndex, 1);
+      await loggedUser.save();
+      res.status(200).json('Video removed from history successfully.');
+    } else {
+      res.status(404).json('Video not found in history.');
+    }
+  } catch (error) {
+    res.status(500).json('Internal server error.');
+  }
 });
 router.post('/history/clearall', async function (req, res, next) {
   const loggedUser = await userModel.findOneAndUpdate({ username: req.session.passport.user.username }, { $set: { watchedVideo: [] } })
@@ -297,11 +315,13 @@ router.get('/playlist/:playlistId', async function (req, res, next) {
 router.post('/playlist/create', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
   const videoIds = req.body['video[]']
+  const video = await videoModel.findOne({_id: videoIds[0]})
   const newPlaylist = new playlistModel({
     user: loggedUser._id,
     title: req.body.title,
     description: req.body.description,
     videos: videoIds.map(videoId => videoId),
+    thumbnail:video.thumbnail,
     visibility: req.body.visibility
   })
   await newPlaylist.save()
@@ -315,9 +335,11 @@ router.post('/showall/:type', async function (req, res, next) {
     res.status(200).json(mergedAndSorted)
   } else if (req.params.type === 'playlist') {
     const playlists = await playlistModel.find({ user: req.body.userId })
+    .populate('user')
     res.status(200).json(playlists)
   } else {
     const videos = await videoModel.find({ user: req.body.userId, type: req.params.type })
+    .populate('user')
     res.status(200).json(videos)
   }
 
@@ -345,11 +367,11 @@ router.post('/subscribe/user/:userId', async function (req, res, next) {
 
 // showing all subscribtions
 router.get('/subscriptions', async function (req, res, next) {
-  const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
-    .populate('subscriptions')
-  res.render('subscriptions.ejs', { leftSection: true, loggedUser: req.user, loggedUser });
+  const loggedUser = await userModel.findOne({ username: req.user.username });
+  let videos = await subscribe(loggedUser.subscriptions)
+  videos = videos.map(video=>({...video.toObject(),timespan:timeSpanFromNow(video.createdDate)}))
+  res.render('subscriptions.ejs', { loggedUser, leftSection: true,videos });
 });
-
 
 // ----------- other rendering routes --------------------------------
 router.get('/results', function (req, res, next) {
@@ -378,6 +400,7 @@ router.get('/you', async function (req, res, next) {
     loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
       .populate('watchedVideo', 'likedVideo', 'watchLater')
       .populate({ path: 'likedVideo', populate: 'user' })
+      .populate({ path: 'watchLater', populate: 'user' })
       .populate({ path: 'watchedVideo', populate: { path: 'video', populate: 'user' } })
   }
 

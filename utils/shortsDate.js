@@ -34,7 +34,5 @@ exports.categorizeVideos = async (allWatchedVideos)=>{
             categorizedVideos[category].videos.push(videoObj.video);
         }
     });
-    console.log(categorizedVideos)
-
     return categorizedVideos;
 }

@@ -53,8 +53,6 @@ const userSchema = mongoose.Schema({
       ref: 'user'
     }
   ]
-
-
 })
 
 module.exports = mongoose.model('user', userSchema)

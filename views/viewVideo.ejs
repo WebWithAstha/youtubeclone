@@ -65,7 +65,7 @@
           </button>
         </div>
       </div>
-      <video class="h-full" autoplay="true" controlsList="nodownload" onclick="togglePlay(this)"
+      <video id="video" class="h-full" autoplay controlsList="nodownload"
         src="<%=videoUrl%>"></video>
     </div>
     <div class="video-details overflow-y-auto w-full flex flex-col gap-4 py-2">
@@ -75,7 +75,9 @@
       <div class="flex items-center justify-between ">
         <div class="profile flex items-center gap-3">
           <a href="/channel/<%=video.user._id%>">
-            <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+            <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden"><img class="h-full w-full object-cover"
+              src="/uploads/images/def.jpg"
+              alt=""></div>
           </a>
           <div class="channel">
             <a href="/channel/<%=video.user._id%>">
@@ -132,7 +134,11 @@
     <div class="comment-section">
       <h1><span>1,173</span> Comments</h1>
       <div class="comment-inp flex mt-4 gap-3">
-        <div class="img w-10 aspect-square shrink-0 h-max bg-gray-500 rounded-full"></div>
+        <div class="img w-10 aspect-square shrink-0 h-max bg-gray-500 rounded-full overflow-hidden">
+          <img class="h-full w-full object-cover"
+                    src="/uploads/images/def.jpg"
+                    alt="">
+        </div>
         <div class="w-full">
           <input type="text" name="" id=""
             class="w-full px-1 mb-2 border-b border-zinc-700 bg-transparent outline-none">
@@ -143,7 +149,11 @@
       <div class="comments">
         <%video.comments.forEach(comment=>{%>
           <div class="comment flex gap-1 mt-5 mb-2">
-            <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full"></div>
+            <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full">
+              <img class="h-full w-full object-cover"
+                    src="/uploads/images/def.jpg"
+                    alt="">
+            </div>
             <div class="comment-dets w-full">
               <div class="flex ml-2 gap-1 items-center">
                 <h3 class="font-medium text-md text-zinc-700">
@@ -174,24 +184,29 @@
   </div>
   <div class="right md:w-1/3 mb-[8vh] md:mb-0">
     <div class="videos mt-6">
-      <div class="video w-full md:mb-1 mb-3 flex md:flex-row flex-col gap-3 h-max">
-        <div
-          class="cursor-pointer shrink-0 md:w-[11vw] aspect-video md:rounded-xl bg-zinc-200 mb-2 relative overflow-hidden">
-          <div class="thumbnail absolute top-0 left-0 w-full h-full bg-zinc-300 rounded-xl hover:hidden">
-            <!-- <img src="https://jw-webmagazine.com/wp-content/uploads/2020/08/Anime-Demon-Slayer-Kimetsu-no-Yaiba.png" class="w-full h-full object-cover" alt=""> -->
+      <%videos.forEach(video=>{%>
+        <a href="/video/<%=video._id%>">
+        <div class="video w-full md:mb-1 hover:bg-zinc-200 p-2 mb-3 flex md:flex-row flex-col gap-3 h-max">
+          <div
+            class="cursor-pointer shrink-0 md:w-[11vw] aspect-video md:rounded-xl bg-zinc-200 mb-2 relative overflow-hidden">
+            <%if(video.thumbnail){%>
+              <div class="thumbnail absolute top-0 left-0 w-full h-full z-[9] overflow-hidden bg-zinc-300 rounded-xl">
+                  <img src="/uploads/images/<%=video.thumbnail%>"
+                      class="w-full h-full object-cover" alt="">
+              </div>
+              <%}%>
+          </div>
+          <div class="dets md:px-0 px-3 relative flex-1">
+            <i class="md:text-xl ri-more-2-fill absolute top-0 right-2 "></i>
+            <h2 class="leading-tight text-md md:max-w-[18vw] max-w-[90%]"><%=video.title%></h2>
+            <div class="flex my-1.5 text-zinc-500 flex-col">
+              <h4 class="text-zinc-500 text-sm leading-tight"><%=video.user.channel%></h4>
+              <h4 class="text-sm leading-tight"><%=video.views.length%> views</h4>
+            </div>
           </div>
         </div>
-        <div class="dets md:px-0 px-3 relative flex-1">
-          <i class="md:text-xl ri-more-2-fill absolute top-0 right-2 "></i>
-          <h2 class="leading-tight text-md md:max-w-[18vw] max-w-[90%]">Attitude | Stand-up Comedy by Ravi Gupta
-            Lorem ipsum dolor sit amet
-          </h2>
-          <div class="flex my-1.5 text-zinc-500 flex-col">
-            <h4 class="text-zinc-500 text-sm leading-tight">channel name</h4>
-            <h4 class="text-sm leading-tight">15 views . <span>2 months ago</span></h4>
-          </div>
-        </div>
-      </div>
+      </a>
+      <%})%>
 
     </div>
   </div>
@@ -202,19 +217,21 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js'
     integrity='sha512-16esztaSRplJROstbIIdwX3N97V1+pZvV33ABoG1H2OyTttBxEGkTsoIVsiP1iaTtM8b3+hu2kB6pQ4Clr5yug=='
     crossorigin='anonymous' referrerpolicy='no-referrer'></script>
-
+<script src="/javascripts/player.js"></script>
   <script>
     document.querySelector('.bottom').style.overflowY = 'scroll';
 
-
-    document.querySelector('video').play()
+    document.querySelector("#video").addEventListener('loadedmetadata', function() {
+        const duration = video.duration;
+        console.log('Video duration:', duration);
+    });
 
 
 
     function addPlayIcon(container) {
       const iconElement = document.createElement('i');
       if (container.querySelector('video').paused) {
-        iconElement.classList.add('ri-check-fill');
+        iconElement.classList.add('ri-pause-fill');
         container.querySelector('video').play()
       } else {
         iconElement.classList.add('ri-play-fill');
@@ -229,8 +246,7 @@
     }
 
     function toggleLike(btn, videoId) {
-      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
-
+      if('<%=isLogged%>'==='false')return alert('Please sign in!!')
       const likeIcon = btn.querySelector('i')
       const dislikeIcon = document.querySelector('#dislike-video-btn i')
       if (likeIcon.classList.contains('ri-thumb-up-line') && dislikeIcon.classList.contains('ri-thumb-down-fill')) {
@@ -239,17 +255,16 @@
       }
       likeIcon.classList.toggle('ri-thumb-up-line')
       likeIcon.classList.toggle('ri-thumb-up-fill')
-      console.log(btn.querySelector('span'))
       axios.post(`/video/like/${videoId}`)
       .then(response => {
-          console.log(response.data)
           btn.querySelector('span').innerHTML = response.data
         })
     }
 
     function toggleDislike(btn, videoId) {
-      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
+      if('<%=isLogged%>'==='false')return alert('Please sign in!!')
 
+      
       const dislikeIcon = btn.querySelector('i')
       const likeIcon = document.querySelector('#like-video-btn i')
       if (dislikeIcon.classList.contains('ri-thumb-down-line') && likeIcon.classList.contains('ri-thumb-up-fill')) {
@@ -266,9 +281,9 @@
 
     }
 
+    
     function toggleSubcribe(btn, userId) {
-      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
-
+      if('<%=isLogged%>'==='false')return alert('Please sign in!!')
       axios.post(`/subscribe/user/${userId}`)
 
       if (btn.textContent === "Subscribe") {
@@ -292,8 +307,7 @@
     }
 
     function toggleWatchLater(btn, videoId) {
-      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
-
+      if('<%=isLogged%>'==='false')return alert('Please sign in!!')
       btn.querySelector("i").classList.toggle("ri-time-line")
       btn.querySelector("i").classList.toggle("ri-check-fill")
       axios.post(`/video/watchlater/${videoId}`)
@@ -302,7 +316,7 @@
   
 
     function comment(btn, videoId) {
-      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
+      if('<%=isLogged%>'==='false')return alert('Please sign in!!')
       let inp = btn.parentNode.querySelector('input')
       if(inp.value==='')return
       axios.post(`/video/comment/${videoId}`, {
@@ -312,7 +326,9 @@
           document.querySelector(".comment-section").innerHTML +=
             `
       <div class="comment flex gap-1 mt-5">
-          <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full"></div>
+          <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
+            <img class="h-full w-full object-cover" src="/uploads/images/def.jpg" alt="">
+            </div>
           <div class="comment-dets w-full">
             <div class="flex ml-2 gap-1 items-center">
               <h3 class="font-medium text-md text-zinc-700">abc</h3>
@@ -339,15 +355,16 @@
 
 
     function showReplyBox(elem,commentId){
-      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
-
+      if('<%=isLogged%>'==='false')return alert('Please sign in!!')
 
       if(document.querySelector(`#reply${commentId}`))return;
       let replyBox = document.createElement("div")
       replyBox.className ='reply-inp flex gap-3'
       replyBox.id="reply"+commentId
       replyBox.innerHTML = `
-      <div class="img w-8 aspect-square shrink-0 h-max bg-gray-500 rounded-full"></div>
+      <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
+            <img class="h-full w-full object-cover" src="/uploads/images/def.jpg" alt="">
+            </div>
                 <div class="w-full">
                   <input type="text" name="" id="" placeholder="type reply.."
                     class="w-full px-1 mb-2 text-sm py-1 border-b border-zinc-700 bg-transparent outline-none">
@@ -370,8 +387,8 @@
     
 
     function reply(btn,commentId) {
-      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
-      let inp = btn.parentNode.parentNode.querySelector('input')
+      if('<%=isLogged%>'==='false')return alert('Please sign in!!')
+      let inp = btn.parentNode.prentNode.querySelector('input')
       if(inp.value==='')return
       let replies=btn.parentNode.parentNode.parentNode.parentNode.querySelector('.replies')
       axios.post(`/reply/comment/${commentId}`, {
@@ -380,7 +397,9 @@
       .then(reply=>{
         replies.innerHTML+=`
         <div class="comment flex gap-1 mt-5">
-          <div class="img w-8 aspect-square h-max bg-gray-500 rounded-full"></div>
+          <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
+            <img class="h-full w-full object-cover" src="/uploads/images/def.jpg" alt="">
+            </div>
           <div class="comment-dets w-full">
             <div class="flex ml-2 gap-1 items-center">
               <h3 class="font-medium text-md text-zinc-700">abc</h3>
@@ -401,8 +420,7 @@
     }
 
     function showReplies(btn,commentId) {
-      if(!'<%=loggedUser.username%>')return alert('Please sign in!!')
-
+      if('<%=isLogged%>'==='false')return alert('Please sign in!!')
       let repliescontainer = btn.parentNode.querySelector('.replies')
       if(btn.textContent.includes('hide')){
         repliescontainer.innerHTML=''
@@ -420,7 +438,9 @@
         response.data.forEach(reply=>{
           repliescontainer.innerHTML+=`
           <div class="comment flex gap-1 mt-5">
-          <div class="img w-8 aspect-square h-max bg-gray-500 rounded-full"></div>
+            <div class="img w-10 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
+            <img class="h-full w-full object-cover" src="/uploads/images/def.jpg" alt="">
+            </div>
           <div class="comment-dets w-full">
             <div class="flex ml-2 gap-1 items-center">
               <h3 class="font-medium text-md text-zinc-700">abc</h3>

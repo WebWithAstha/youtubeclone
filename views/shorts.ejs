@@ -83,6 +83,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
+document.querySelector('.focused').classList.remove("focused","bg-zinc-300")
+        document.querySelector('#shorts').classList.add("focused","bg-zinc-300")
+
         document.querySelector(".short-container").addEventListener("wheel", function (dets) {
             if (dets.target.parentNode === document.querySelector('.short-container')) {
                 let rightElement = document.querySelector('.right');
@@ -94,18 +97,6 @@
                 }
             }
         })
-
-
-        //     document.querySelector(".short-container").addEventListener('scroll', function() {
-        //     var parentDiv = document.getElementById('parentDiv');
-        //     var child2 = document.getElementById('child2');
-        //     var child2Top = child2.getBoundingClientRect().top;
-        //     var child2Height = window.innerHeight - child2Top; // Viewport height se child 2 ka top position subtract karo
-        //     child2.style.height = child2Height + 'px'; // Child 2 ka height set karo
-        // });
-
-
-
 
         function toggleLike(btn, videoId) {
             if (!'<%=loggedUser%>') return alert('Please sign in!!')
@@ -120,8 +111,6 @@
             likeIcon.classList.toggle('ri-thumb-up-fill')
             axios.post(`/video/like/${videoId}`)
                 .then(response => {
-                    console.log(btn.parentNode.querySelector('#like-num'))
-
                     btn.parentNode.querySelector('#like-num').innerHTML = response.data
                 })
         }
@@ -139,10 +128,8 @@
             dislikeIcon.classList.toggle('ri-thumb-down-line')
             axios.post(`/video/dislike/${videoId}`)
                 .then(response => {
-                    console.log(btn.parentNode.parentNode.querySelector('#like-num'))
                     btn.parentNode.parentNode.querySelector('#like-num').innerHTML = response.data
                 })
-
 
         }
 

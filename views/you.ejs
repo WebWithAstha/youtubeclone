@@ -24,8 +24,8 @@
             </div>
             <%if(loggedUser.watchedVideo.length>0){%>
             <div class="flex items-center gap-1.5 w-full relative">
-                <i class="ri-history-line text-xl"></i>
-                <h2 class="font-semibold text-xl">History</h2>
+                <i class="ri-history-line text-lg"></i>
+                <h2 class="font-semibold text-lg">History</h2>
                 <a class="text-sm text-blue-700 absolute top-1/2 -translate-y-1/2 right-0 ">See all</a>
             </div>
             <div class="history-videos mt-6 flex gap-1 flex-wrap ">
@@ -61,43 +61,40 @@
                 </div>
             </div>
             <%}%>
-
             <%if(loggedUser.watchLater.length>0){%>
-
             <div class="flex items-center gap-1.5 w-full relative">
-                <i class="ri-history-line text-xl"></i>
-                <h2 class="font-semibold text-xl">Watch Later <span><%=loggedUser.watchLater.length%></span></h2>
+                <i class="ri-time-line text-lg"></i>
+                <h2 class="font-semibold text-lg">Watch Later <span>(<%=loggedUser.watchLater.length%>)</span></h2>
                 <a class="text-sm text-blue-700 absolute top-1/2 -translate-y-1/2 right-0 ">See all</a>
 
             </div>
             <div class="watchlater-videos mt-6 flex gap-1 flex-wrap ">
                 <%loggedUser.watchLater.forEach(video=>{%>
-                    <a href="/video/<%=video.video._id%>">
+                    <a href="/video/<%=video._id%>">
                         <div class="video w-52 h-max mb-3">
                             <div class="vid bg-zinc-200 w-52 aspect-video rounded-lg relative">
-                                <%if(video.video.thumbnail){%>
+                                <%if(video.thumbnail){%>
                                     <div class="thumbnail absolute top-0 left-0 w-full h-full z-[9] overflow-hidden bg-zinc-300 rounded-xl">
-                                        <img src="/uploads/images/<%=video.video.thumbnail%>"
+                                        <img src="/uploads/images/<%=video.thumbnail%>"
                                             class="w-full h-full object-cover" alt="">
                                     </div>
                                     <%}%>
                             </div>
                             <div class="about-video w-full relative mt-1">
                                 <i class="ri-more-2-fill text-sm absolute top-0 -right-1 "></i>
-                                <h2 class="text-sm w-[90%] font-medium"><%=video.video.title%></h2>
-                                <h4 class="text-[.9vw]"><%=video.video.user.channel%></h4>
-                                <h4 class="text-[.9vw]"><%=video.video.views.length%> views</h4>
+                                <h2 class="text-sm w-[90%] font-medium"><%=video.title%></h2>
+                                <h4 class="text-[.9vw]"><%=video.user.channel%></h4>
+                                <h4 class="text-[.9vw]"><%=video.views.length%> views</h4>
                             </div>
                         </div>
                     </a>
                     <%})%>
             </div>
             <%}%>
-
             <%if(loggedUser.likedVideo.length>0){%>
             <div class="flex items-center gap-1.5 w-full relative">
-                <i class="ri-history-line text-xl"></i>
-                <h2 class="font-semibold text-xl">Liked Videos <span><%=loggedUser.likedVideo.length%></span></h2>
+                <i class="ri-thumb-up-line text-lg"></i>
+                <h2 class="font-semibold text-lg">Liked Videos <span>(<%=loggedUser.likedVideo.length%>)</span></h2>
                 <a class="text-sm text-blue-700 absolute top-1/2 -translate-y-1/2 right-0 ">See all</a>
 
             </div>
@@ -124,9 +121,8 @@
                     <%})%>
             </div>
             <%}%>
-
             <%}else{%>
-                <div class="flex w-full h-full items-center pt-32 flex-col gap-5">
+            <div class="flex w-full h-full items-center pt-32 flex-col gap-5">
                     <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24"
                         viewBox="0 0 24 24" width="24" focusable="false"
                         style="pointer-events: none; display: block; width: 11%; height: max-content;">
@@ -139,7 +135,13 @@
                             <i class="ri-account-circle-line text-2xl opacity-90 mt-[2px]"></i>
                             <span class="text-sm font-medium">Sign in</span>
                         </button></a>
-                </div>
-                <%}%>
+            </div>
+            <%}%>
     </div>
-    <%include ./partials/footer%>
+
+    <script>
+        document.querySelector('.focused').classList.remove("focused","bg-zinc-300")
+        document.querySelector('#you').classList.add("focused","bg-zinc-300")
+    </script>
+
+<%include ./partials/footer%>

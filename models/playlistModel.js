@@ -6,6 +6,7 @@ const playlistSchema = mongoose.Schema({
         ref: 'user',
         required: true
     },
+    thumbnail:String,
     title: {
         type: String,
         required: true
