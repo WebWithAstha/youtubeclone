@@ -6,86 +6,90 @@
                 <h1 class="text-4xl font-bold mb-10">Watch History</h1>
 
 
+                <div id="watchHistoryVideos">
 
-                <%Object.keys(allHistory).forEach(category=>{%>
-                    <%if(allHistory[category].shorts.length > 0 || allHistory[category].videos.length>0){%>
+                    <%Object.keys(allHistory).forEach(category=>{%>
+                        <%if(allHistory[category].shorts.length> 0 || allHistory[category].videos.length>0){%>
 
 
-                        <div class="day">
-                            <h2 class="text-xl font-bold my-8 capitalize">
-                                <%=category%>
-                            </h2>
+                            <div class="day">
+                                <h2 class="text-xl font-bold my-8 capitalize">
+                                    <%=category%>
+                                </h2>
 
-                            <div class="flex items-center gap-1 py-1.5 mb-4 relative">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    focusable="false" style="pointer-events: none; display: block;  height: 100%;">
-                                    <g>
-                                        <path
-                                            d="M17.77,10.32l-1.2-.5L18,9.06a3.74,3.74,0,0,0-3.5-6.62L6,6.94a3.74,3.74,0,0,0,.23,6.74l1.2.49L6,14.93a3.75,3.75,0,0,0,3.5,6.63l8.5-4.5a3.74,3.74,0,0,0-.23-6.74Z"
-                                            fill="red"></path>
-                                        <polygon points="10 14.65 15 12 10 9.35 10 14.65" fill="#fff"></polygon>
-                                    </g>
-                                </svg>
-                                <h2 class="text-xl font-bold">Shorts</h2>
-                                <i class="text-xl ri-more-2-fill absolute top-1/2 -translate-y-1/2 right-14 "></i>
+                                <div class="flex items-center gap-1 py-1.5 mb-4 relative">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        focusable="false" style="pointer-events: none; display: block;  height: 100%;">
+                                        <g>
+                                            <path
+                                                d="M17.77,10.32l-1.2-.5L18,9.06a3.74,3.74,0,0,0-3.5-6.62L6,6.94a3.74,3.74,0,0,0,.23,6.74l1.2.49L6,14.93a3.75,3.75,0,0,0,3.5,6.63l8.5-4.5a3.74,3.74,0,0,0-.23-6.74Z"
+                                                fill="red"></path>
+                                            <polygon points="10 14.65 15 12 10 9.35 10 14.65" fill="#fff"></polygon>
+                                        </g>
+                                    </svg>
+                                    <h2 class="text-xl font-bold">Shorts</h2>
+                                    <i class="text-xl ri-more-2-fill absolute top-1/2 -translate-y-1/2 right-14 "></i>
 
-                            </div>
-                            <div class="shorts flex w-full gap-1 mb-6 overflow-x-auto">
-                                <%allHistory[category].shorts.reverse().forEach(short=>{%>
-                                    <div class="short w-52 h-max shrink-0">
-                                        <div class="video bg-zinc-300 rounded-lg w-full h-[18rem] overflow-hidden">
-                                            <img src="/uploads/images/<%=short.thumbnail%>"
-                                                class="w-full h-full object-cover" alt="">
-                                        </div>
-                                        <h4 class="text-sm font-semibold">
-                                            <%=short.description.slice(0,40)+"..."%>
-                                        </h4>
-                                        <h4 class="text-zinc-500 text-sm">
-                                            <%=short.views.length%> views
-                                        </h4>
-                                    </div>
-                                    <%})%>
-
-                            </div>
-                            <hr>
-                            <div class="videos mt-4">
-                                <%allHistory[category].videos.reverse().forEach(video=>{%>
-
-                                    <div class="video w-full mb-1 flex gap-3 h-max">
-                                        <div
-                                            class="cursor-pointer shrink-0 w-[16vw] aspect-video rounded-xl bg-zinc-200 mb-2 relative overflow-hidden">
-                                            <img src="/uploads/images/<%=video.thumbnail%>"
-                                                class="w-full h-full object-cover" alt="">
-                                        </div>
-                                        <div class="dets relative flex-1">
-                                            <i class="text-xl ri-more-2-fill absolute top-0 right-2 "></i>
-                                            <i
-                                                class="text-2xl ri-close-line absolute top-0 right-14 font-light text-zinc-600"></i>
-                                            <h2 class="leading-tight text-xl max-w-[18vw]">
-                                                <%=video.title%>
-                                            </h2>
-                                            <div class="flex gap-1 items-center my-1.5 text-zinc-500">
-                                                <h4 class="text-zinc-500 text-sm">
-                                                    <%=video.user.channel%>
-                                                </h4>
-                                                <i class="ri-circle-fill text-[4px]"></i>
-                                                <h4 class="text-sm">
-                                                    <%=video.views.length%> views
-                                                </h4>
+                                </div>
+                                <div class="shorts flex w-full gap-1 mb-6 overflow-x-auto">
+                                    <%allHistory[category].shorts.reverse().forEach(short=>{%>
+                                        <div id="video<%=short._id%>" class="short w-52 h-max shrink-0 relative">
+                                            <i onclick="removeFromWatchHistory(this,'<%=short._id%>')"
+                                                class="text-lg ri-close-line absolute top-1 right-1 w-8 rounded-full flex items-center justify-center aspect-square font-light text-zinc-900 bg-[rgb(255,255,255,.5)]"></i>
+                                            <div class="video bg-zinc-300 rounded-lg w-full h-[18rem] overflow-hidden">
+                                                <img src="/uploads/images/<%=short.thumbnail%>"
+                                                    class="w-full h-full object-cover" alt="">
                                             </div>
-                                            <p class="text-zinc-500 text-sm">
-                                                <%=video.description.slice(0,90)%>
-                                            </p>
+                                            <h4 class="text-sm font-semibold">
+                                                <%=short.description.slice(0,40)+"..."%>
+                                            </h4>
+                                            <h4 class="text-zinc-500 text-sm">
+                                                <%=short.views.length%> views
+                                            </h4>
                                         </div>
-                                    </div>
-                                    <%})%>
+                                        <%})%>
 
+                                </div>
+                                <hr>
+                                <div class="videos mt-4">
+                                    <%allHistory[category].videos.reverse().forEach(video=>{%>
+                                        <div id="video<%=video._id%>" class="video w-full mb-1 flex gap-3 h-max">
+                                            <div
+                                                class="cursor-pointer shrink-0 w-[16vw] aspect-video rounded-xl bg-zinc-200 mb-2 relative overflow-hidden">
+                                                <img src="/uploads/images/<%=video.thumbnail%>"
+                                                    class="w-full h-full object-cover" alt="">
+                                            </div>
+                                            <div class="dets relative flex-1">
+                                                <i class="text-xl ri-more-2-fill absolute top-0 right-2 "></i>
+                                                <i onclick="removeFromWatchHistory(this,'<%=video._id%>')"
+                                                    class="text-2xl ri-close-line absolute top-0 right-14 font-light text-zinc-600"></i>
+                                                <h2 class="leading-tight text-xl max-w-[18vw]">
+                                                    <%=video.title%>
+                                                </h2>
+                                                <div class="flex gap-1 items-center my-1.5 text-zinc-500">
+                                                    <h4 class="text-zinc-500 text-sm">
+                                                        <%=video.user.channel%>
+                                                    </h4>
+                                                    <i class="ri-circle-fill text-[4px]"></i>
+                                                    <h4 class="text-sm">
+                                                        <%=video.views.length%> views
+                                                    </h4>
+                                                </div>
+                                                <p class="text-zinc-500 text-sm">
+                                                    <%=video.description.slice(0,90)%>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <%})%>
+
+                                </div>
                             </div>
-                        </div>
 
 
-                <%}%>
-                <%})%>
+                            <%}%>
+                                <%})%>
+                </div>
+
 
             </div>
             <%}else{%>
@@ -128,25 +132,36 @@
                                 </div>
 
                     </div>
+    </div>
 
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
-                        integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
-                        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-                    <script>
-                        function removeFromWatchHistory(elem, videoId) {
-                            axios.post(`/history/remove/${videoId}`)
-                                .then(response => {
-                                    document.querySelector(`#video${videoId}`).remove()
-                                })
-                        }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
+        integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        // document.querySelectorAll('.focused').forEach(e=>{
+        //     e.style.backgroundColor = "white"
 
-                        function clearAllWatchHistory() {
-                            axios.post('/history/clearall')
-                                .then(response => {
-                                    document.querySelector('#watchHistoryVideos').innerHTML = ''
-                                })
-                        }
+        // })
+        document.querySelector('.focused').classList.remove("focused","bg-zinc-300")
 
-                    </script>
+        document.querySelector('#history').classList.add("focused", "bg-zinc-300")
 
-                    <%include ./partials/footer%>
+
+
+        function removeFromWatchHistory(elem, videoId) {
+            axios.post(`/history/remove/${videoId}`)
+                .then(response => {
+                    document.querySelector(`#video${videoId}`).remove()
+                })
+        }
+
+        function clearAllWatchHistory() {
+            axios.post('/history/clearall')
+                .then(response => {
+                    document.querySelector('#watchHistoryVideos').innerHTML = 'No history found'
+                })
+        }
+
+    </script>
+
+    <%include ./partials/footer%>
