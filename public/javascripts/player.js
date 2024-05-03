@@ -10,7 +10,6 @@ const volumeSlider = document.querySelector(".volume-slider")
 const videoContainer = document.querySelector(".video-container")
 const timelineContainer = document.querySelector(".timeline-container")
 const video = document.querySelector("#video")
-console.log(currentTimeElem, totalTimeElem, timelineContainer)
 document.addEventListener("keydown", e => {
     const tagName = document.activeElement.tagName.toLowerCase()
 

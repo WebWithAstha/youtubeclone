@@ -1,0 +1,49 @@
+<% include ./partials/header.ejs %>
+    <div class="right h-full flex-1 flex gap-3 relative px-6 pt-8">
+        <div class="about-playlist shrink-0 h-[95%] bg-zinc-300 w-[24vw] rounded-xl p-7 overflow-y-auto">
+            <img class="h-[26vh] rounded-xl w-full bg-red-500 mb-3 object-cover" src="/uploads/images/<%=loggedUser.watchLater[0].thumbnail%>" alt="">
+            <h1 class="text-3xl font-bold">Watchlater</h1>
+            <h4 class="mt-5 font-medium"><%=loggedUser.channel%></h4>
+            <p class="text-zinc-600 text-sm mb-3"><%=loggedUser.watchLater.length%> videos, <%=loggedUser.watchLater[0].views.length%> views, Last updated on <%= new Date(loggedUser.watchLater[loggedUser.watchLater.length-1].createdDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }) %></p>
+            <div class="actions flex gap-2 mb-4">
+                <i class="ri-thumb-up-line w-10 text-lg flex items-center justify-center bg-[rgba(0,0,0,.7)] text-white aspect-square rounded-full"></i>
+                <i class="ri-more-2-line w-10 text-lg flex items-center justify-center bg-[rgba(0,0,0,.7)] text-white aspect-square rounded-full"></i>
+            </div>
+            <button class="px-8 py-1.5 bg-white font-medium mr-2 rounded-3xl"><i class="ri-play-fill mr-1 text-xl"></i>Play all</button>
+            <button class="px-8 py-1.5 bg-white font-medium  rounded-3xl"><i class="ri-shuffle-fill mr-1 text-xl"></i>Shuffle</button>
+            <p class="mt-3">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
+
+        </div>
+        <div class="playlist-videos w-full overflow-y-auto">
+            <%loggedUser.watchLater.forEach((video,i)=>{%>
+                <a href="/video/<%=video._id%>">
+                <div class="video flex gap-4 relative w-full mb-1 hover:bg-zinc-200 p-1 py-2 rounded-xl pl-8">
+                    <h1 class="absolute top-1/2 -translate-y-1/2 left-2 font-medium"><%=i+1%></h1>
+                    <div class="bg-zinc-500 rounded-xl w-[11vw] h-[13.5vh] relative">
+                        <%if(video.thumbnail){%>
+                            <div
+                                class="thumbnail absolute top-0 left-0 flex items-center justify-center w-full h-full z-[9] overflow-hidden bg-zinc-800 rounded-xl">
+                                <img src="/uploads/images/<%=video.thumbnail%>"
+                                    class="w-full h-full object-cover" alt="">
+                            </div>
+                            <%}%>
+                    </div>
+                    <div class="video-dets">
+                        <h1 class="font-medium text-[1.1vw] mb-2"><%=video.title%></h1>
+                        <h2 class="text-sm text-zinc-700 break-all"><%=video.description%></h2>
+                    </div>
+                    <i class="text-xl ri-more-2-fill absolute top-1/2 -translate-y-1/2 right-2 hidden"></i>
+                </div>
+            </a>
+            <%})%>
+     
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.focused').classList.remove("focused", "bg-zinc-300")
+        document.querySelector('#watchlater').classList.add("focused", "bg-zinc-300")
+    </script>
+
+
+    <% include ./partials/footer.ejs %>

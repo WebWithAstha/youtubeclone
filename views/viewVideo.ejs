@@ -149,7 +149,7 @@
       <div class="comments">
         <%video.comments.forEach(comment=>{%>
           <div class="comment flex gap-1 mt-5 mb-2">
-            <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full">
+            <div class="img w-10 shrink-0 aspect-square h-max bg-gray-500 rounded-full overflow-hidden">
               <img class="h-full w-full object-cover"
                     src="/uploads/images/def.jpg"
                     alt="">
@@ -228,22 +228,7 @@
 
 
 
-    function addPlayIcon(container) {
-      const iconElement = document.createElement('i');
-      if (container.querySelector('video').paused) {
-        iconElement.classList.add('ri-pause-fill');
-        container.querySelector('video').play()
-      } else {
-        iconElement.classList.add('ri-play-fill');
-        container.querySelector('video').pause()
-      }
-      iconElement.classList.add('icon', 'absolute', 'pointer-events-none', 'aspect-square', 'text-white', 'text-5xl', 'rounded-full', 'items-center', 'p-4', 'bg-[rgba(1,1,1,.5)]');
-
-      container.appendChild(iconElement);
-      setTimeout(function () {
-        container.removeChild(iconElement);
-      }, 1000);
-    }
+   
 
     function toggleLike(btn, videoId) {
       if('<%=isLogged%>'==='false')return alert('Please sign in!!')
@@ -331,7 +316,7 @@
             </div>
           <div class="comment-dets w-full">
             <div class="flex ml-2 gap-1 items-center">
-              <h3 class="font-medium text-md text-zinc-700">abc</h3>
+              <h3 class="font-medium text-md text-zinc-700">${comment.data.user.channel}</h3>
               <h3 class="text-[10px] text-zinc-600 -mb-1">5 months ago</h3>
             </div>
             <p class="ml-2 text-sm">${comment.data.comment}</p>
@@ -388,6 +373,7 @@
 
     function reply(btn,commentId) {
       if('<%=isLogged%>'==='false')return alert('Please sign in!!')
+      console.log(btn.parentNode.parentNode)
       let inp = btn.parentNode.prentNode.querySelector('input')
       if(inp.value==='')return
       let replies=btn.parentNode.parentNode.parentNode.parentNode.querySelector('.replies')
