@@ -1,7 +1,8 @@
 <% include ./partials/header.ejs %>
     <div class="right h-full flex-1 flex gap-3 relative px-6 pt-8">
+        <%if(loggedUser.watchLater.length>0){%>
         <div class="about-playlist shrink-0 h-[95%] bg-zinc-300 w-[24vw] rounded-xl p-7 overflow-y-auto">
-            <img class="h-[26vh] rounded-xl w-full bg-red-500 mb-3 object-cover" src="/uploads/images/<%=loggedUser.watchLater[0].thumbnail%>" alt="">
+            <img class="h-[26vh] rounded-xl w-full bg-red-500 mb-3 object-cover" src="/uploads/images/<%=loggedUser.watchLater.length>0?loggedUser.watchLater[0].thumbnail:''%>" alt="">
             <h1 class="text-3xl font-bold">Watchlater</h1>
             <h4 class="mt-5 font-medium"><%=loggedUser.channel%></h4>
             <p class="text-zinc-600 text-sm mb-3"><%=loggedUser.watchLater.length%> videos, <%=loggedUser.watchLater[0].views.length%> views, Last updated on <%= new Date(loggedUser.watchLater[loggedUser.watchLater.length-1].createdDate).toLocaleDateString('en-US', { month: 'long', day: '2-digit', year: 'numeric' }) %></p>
@@ -19,7 +20,7 @@
                 <a href="/video/<%=video._id%>">
                 <div class="video flex gap-4 relative w-full mb-1 hover:bg-zinc-200 p-1 py-2 rounded-xl pl-8">
                     <h1 class="absolute top-1/2 -translate-y-1/2 left-2 font-medium"><%=i+1%></h1>
-                    <div class="bg-zinc-500 rounded-xl w-[11vw] h-[13.5vh] relative">
+                    <div class="bg-zinc-500 rounded-xl w-[11vw] shrink-0 h-[13.5vh] relative">
                         <%if(video.thumbnail){%>
                             <div
                                 class="thumbnail absolute top-0 left-0 flex items-center justify-center w-full h-full z-[9] overflow-hidden bg-zinc-800 rounded-xl">
@@ -38,6 +39,14 @@
             <%})%>
      
         </div>
+        <%}else{%>
+            <div class="flex items-center justify-center w-full h-full">
+                <div class="w-max flex items-center -ml-20 -mt-40 gap-2">
+                    <i class="ri-time-line text-lg font-light"></i>
+                    <h1 class="text-sm">No videos to watchlater.</h1>
+                </div>
+            </div>
+        <%}%>
     </div>
 
     <script>

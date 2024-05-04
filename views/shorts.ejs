@@ -4,21 +4,22 @@
         <div id="child1" class="short-container transition-all duration-700 flex items-end justify-center py-3 mb-4">
 
             <div class="short-panel relative flex items-center justify-center w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
-                <div class="thumbnail absolute top-0 left-0 w-full h-full pointer-events-none">
-                    <img class="w-full h-full object-cover" src="/uploads/images/<%=short.thumbnail%>" alt="">
-                </div>
+                <video autoplay onclick="togglePlay(this)" src="<%=shortUrl%>" class="w-full h-full object-cover"></video>
+                
 +
             </div>
             <div class="options flex flex-col px-3">
                 <div class="text-center mb-5">
-                    <i
-                        class="ri-thumb-up-line text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                    </button>
+                    <%if(isLogged && short.likes.indexOf(loggedUser._id)===-1){%>
+                        <i id="like-video-btn" onclick="toggleLike(this,'<%=short._id%>')" class="ri-thumb-up-line text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                        <%}else{%>
+                        <i id="like-video-btn" onclick="toggleLike(this,'<%=short._id%>')" class="ri-thumb-up-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                    <%}%>
+                        <h2 id="like-num" class="mt-1.5 text-md"><%=short.likes.length%></h2>
                 </div>
                 <div class="text-center mb-5">
-                    <i
-                        class="ri-thumb-down-line text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                    </button>
+                    <i id="dislike-video-btn" onclick="toggleDislike(this,'<%=short._id%>')" class="ri-thumb-down-line text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                    
                     <h2 class="mt-1.5 text-md">Dislike</h2>
                 </div>
                 <div class="text-center mb-5">
@@ -98,11 +99,14 @@ document.querySelector('.focused').classList.remove("focused","bg-zinc-300")
             }
         })
 
-        function toggleLike(btn, videoId) {
-            if (!'<%=loggedUser%>') return alert('Please sign in!!')
+        function togglePlay(video){
+            video.paused? video.play() : video.pause()
+        }
 
-            const likeIcon = btn.querySelector('i')
-            const dislikeIcon = document.querySelector('#dislike-video-btn i')
+
+        function toggleLike(likeIcon, videoId) {
+            if ('<%=isLogged%>'=='false') return alert('Please sign in!!')
+            const dislikeIcon = document.querySelector('#dislike-video-btn')
             if (likeIcon.classList.contains('ri-thumb-up-line') && dislikeIcon.classList.contains('ri-thumb-down-fill')) {
                 dislikeIcon.classList.remove('ri-thumb-down-fill')
                 dislikeIcon.classList.add('ri-thumb-down-line')
@@ -111,15 +115,13 @@ document.querySelector('.focused').classList.remove("focused","bg-zinc-300")
             likeIcon.classList.toggle('ri-thumb-up-fill')
             axios.post(`/video/like/${videoId}`)
                 .then(response => {
-                    btn.parentNode.querySelector('#like-num').innerHTML = response.data
+                    likeIcon.parentNode.querySelector('#like-num').innerHTML = response.data
                 })
         }
 
-        function toggleDislike(btn, videoId) {
-            if (!'<%=loggedUser%>') return alert('Please sign in!!')
-
-            const dislikeIcon = btn.querySelector('i')
-            const likeIcon = document.querySelector('#like-video-btn i')
+        function toggleDislike(dislikeIcon, videoId) {
+            if ('<%=isLogged%>'=='false') return alert('Please sign in!!')
+            const likeIcon = document.querySelector('#like-video-btn')
             if (dislikeIcon.classList.contains('ri-thumb-down-line') && likeIcon.classList.contains('ri-thumb-up-fill')) {
                 likeIcon.classList.remove('ri-thumb-up-fill')
                 likeIcon.classList.add('ri-thumb-up-line')
@@ -128,7 +130,7 @@ document.querySelector('.focused').classList.remove("focused","bg-zinc-300")
             dislikeIcon.classList.toggle('ri-thumb-down-line')
             axios.post(`/video/dislike/${videoId}`)
                 .then(response => {
-                    btn.parentNode.parentNode.querySelector('#like-num').innerHTML = response.data
+                    dislikeIcon.parentNode.parentNode.querySelector('#like-num').innerHTML = response.data
                 })
 
         }

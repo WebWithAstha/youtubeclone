@@ -207,10 +207,11 @@ router.post('/video/watchlater/:videoId', async function (req, res, next) {
 router.post('/video/comment/:videoId', async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ _id: req.params.videoId })
-  const comment = await commentModel.create({
+  const comment = await new commentModel({
     comment: req.body.comment,
     user: loggedUser._id,
-  })
+  }).populate('user')
+  await comment.save()
   video.comments.push(comment._id)
   await video.save()
   res.status(200).json(comment)
@@ -374,13 +375,26 @@ router.get('/results', function (req, res, next) {
   res.render('results.ejs', { leftSection: true, loggedUser: req.user });
 });
 router.get('/shorts', async function (req, res, next) {
+
+  let loggedUser
+  let isLogged = false
+  if(req.user){
+    loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
+    isLogged=true
+  }
   const shorts = await videoModel.find({ type: 'short' })
   const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${shorts[0].videoName}?accessKey=${STREAM_KEY}`
-  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user, short: shorts[0], index: 1, shortUrl });
+  
+  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser, short: shorts[0], index: 1, shortUrl,isLogged });
 });
 router.get('/shorts/:index', async function (req, res, next) {
+  let loggedUser
+  let isLogged = false
+  if(req.user){
+    loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
+    isLogged=true
+  }
   const shorts = await videoModel.find({ type: 'short' })
-
   let index;
   if (shorts.length - 1 === Number(req.params.index)) {
     index = Number(req.params.index);
@@ -388,7 +402,7 @@ router.get('/shorts/:index', async function (req, res, next) {
     index = Number(req.params.index) + 1;
   }
   const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${shorts[index].videoName}?accessKey=${STREAM_KEY}`
-  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser: req.user, short: shorts[index], index, shortUrl });
+  res.render('shorts.ejs', { leftSection: true, shorts, loggedUser, short: shorts[index], index, shortUrl,isLogged });
 });
 router.get('/you', async function (req, res, next) {
   let loggedUser = req.user

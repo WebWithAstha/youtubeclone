@@ -142,7 +142,7 @@
                                                         <%=video.title%>
                                                     </h1>
                                                     <p class="text-sm text-zinc-400">
-                                                        <%= video.description.slice(0,70)+" ..." %>
+                                                        <%= video.description ? video.description.slice(0,70)+" ..." :'no description' %>
                                                     </p>
                                                 </div>
                                 </div>

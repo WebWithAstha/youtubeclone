@@ -17,7 +17,9 @@
                                     <%=category%>
                                 </h2>
 
+                                <%if(allHistory[category].shorts.length>0){%>
                                 <div class="flex items-center gap-1 py-1.5 mb-4 relative">
+
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         focusable="false" style="pointer-events: none; display: block;  height: 100%;">
                                         <g>
@@ -29,8 +31,9 @@
                                     </svg>
                                     <h2 class="text-xl font-bold">Shorts</h2>
                                     <i class="text-xl ri-more-2-fill absolute top-1/2 -translate-y-1/2 right-14 "></i>
-
+                                    
                                 </div>
+                                <%}%>
                                 <div class="shorts flex w-full gap-1 mb-6 overflow-x-auto">
                                     <%allHistory[category].shorts.reverse().forEach(short=>{%>
                                         <div id="video<%=short._id%>" class="short w-52 h-max shrink-0 relative">

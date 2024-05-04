@@ -221,13 +221,6 @@
   <script>
     document.querySelector('.bottom').style.overflowY = 'scroll';
 
-    document.querySelector("#video").addEventListener('loadedmetadata', function() {
-        const duration = video.duration;
-        console.log('Video duration:', duration);
-    });
-
-
-
    
 
     function toggleLike(btn, videoId) {
@@ -373,8 +366,7 @@
 
     function reply(btn,commentId) {
       if('<%=isLogged%>'==='false')return alert('Please sign in!!')
-      console.log(btn.parentNode.parentNode)
-      let inp = btn.parentNode.prentNode.querySelector('input')
+      let inp = btn.parentNode.parentNode.querySelector('input')
       if(inp.value==='')return
       let replies=btn.parentNode.parentNode.parentNode.parentNode.querySelector('.replies')
       axios.post(`/reply/comment/${commentId}`, {
