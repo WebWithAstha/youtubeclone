@@ -3,23 +3,47 @@
 
         <div id="child1" class="short-container transition-all duration-700 flex items-end justify-center py-3 mb-4">
 
-            <div class="short-panel relative flex items-center justify-center w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
-                <video autoplay onclick="togglePlay(this)" src="<%=shortUrl%>" class="w-full h-full object-cover"></video>
-                
-+
+            <div
+                class="short-panel relative flex items-center justify-center w-[20rem] h-[80vh] bg-zinc-200 rounded-lg overflow-hidden">
+                <video autoplay onclick="togglePlay(this)" src="<%=shortUrl%>"
+                    class="w-full h-full object-cover pointer-events-none"></video>
+                <div class="absolute w-full bottom-0 left-0 bg-[rgb(1,1,1,.4)] text-white p-2 px-4 pointer-events-none">
+                    <div class="profile flex items-center gap-1 mb-1">
+                        <a href="/channel/<%=short.user._id%>">
+                            <div class="img w-6 aspect-square h-max bg-gray-500 rounded-full overflow-hidden"><img
+                                    class="h-full w-full object-cover" src="/uploads/images/def.jpg" alt=""></div>
+                        </a>
+                        <a href="/channel/<%=short.user._id%>">
+                            <h3 class="text-sm font-medium leading-tight">
+                                <%=short.user.channel%>
+                            </h3>
+                        </a>
+                    </div>
+                    <h1 class="mb-1">
+                        <%=short.title%>
+                    </h1>
+                    <h1 class="leading-[1] font-normal text-xs mb-2">
+                        <%=short.description.slice(0,60)+"..."%>
+                    </h1>
+                </div>
             </div>
             <div class="options flex flex-col px-3">
                 <div class="text-center mb-5">
                     <%if(isLogged && short.likes.indexOf(loggedUser._id)===-1){%>
-                        <i id="like-video-btn" onclick="toggleLike(this,'<%=short._id%>')" class="ri-thumb-up-line text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                        <i id="like-video-btn" onclick="toggleLike(this,'<%=short._id%>')"
+                            class="ri-thumb-up-line text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
                         <%}else{%>
-                        <i id="like-video-btn" onclick="toggleLike(this,'<%=short._id%>')" class="ri-thumb-up-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                    <%}%>
-                        <h2 id="like-num" class="mt-1.5 text-md"><%=short.likes.length%></h2>
+                            <i id="like-video-btn" onclick="toggleLike(this,'<%=short._id%>')"
+                                class="ri-thumb-up-fill text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+                            <%}%>
+                                <h2 id="like-num" class="mt-1.5 text-md">
+                                    <%=short.likes.length%>
+                                </h2>
                 </div>
                 <div class="text-center mb-5">
-                    <i id="dislike-video-btn" onclick="toggleDislike(this,'<%=short._id%>')" class="ri-thumb-down-line text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
-                    
+                    <i id="dislike-video-btn" onclick="toggleDislike(this,'<%=short._id%>')"
+                        class="ri-thumb-down-line text-2xl bg-zinc-100 w-max aspect-square p-2.5 hover:bg-zinc-200 cursor-pointer rounded-full "></i>
+
                     <h2 class="mt-1.5 text-md">Dislike</h2>
                 </div>
                 <div class="text-center mb-5">
@@ -44,7 +68,9 @@
         <div class="short-container  flex items-end justify-center mb-4 transition-all duration-700 relative">
             <div class="short-panel w-80 h-[80vh] bg-[#fcfefc] overflow-hidden relative ">
                 <div class="thumbnail absolute top-0 left-0 w-full h-full pointer-events-none flex items-center">
-                    <img class="w-full object-contain " src="https://res.cloudinary.com/bytesizedpieces/image/upload/v1656084931/article/a-how-to-guide-on-making-an-animated-loading-image-for-a-website/animated_loader_gif_n6b5x0.gif" alt="">
+                    <img class="w-full object-contain "
+                        src="https://res.cloudinary.com/bytesizedpieces/image/upload/v1656084931/article/a-how-to-guide-on-making-an-animated-loading-image-for-a-website/animated_loader_gif_n6b5x0.gif"
+                        alt="">
                 </div>
             </div>
             <div class="options flex flex-col px-3">
@@ -84,28 +110,37 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
-document.querySelector('.focused').classList.remove("focused","bg-zinc-300")
-        document.querySelector('#shorts').classList.add("focused","bg-zinc-300")
+        document.querySelector('.focused').classList.remove("focused", "bg-zinc-300")
+        document.querySelector('#shorts').classList.add("focused", "bg-zinc-300")
 
+        let flag = 0;
         document.querySelector(".short-container").addEventListener("wheel", function (dets) {
+            console.log("kuch bhi", dets.target.parentNode)
+            console.log("shortcont", document.querySelector('.short-container'))
             if (dets.target.parentNode === document.querySelector('.short-container')) {
+                console.log(flag, "andr")
                 let rightElement = document.querySelector('.right');
-                if (dets.wheelDeltaY < 0) {
+
+                if (dets.wheelDeltaY < 0 && flag === 0) {
                     rightElement.scrollTop = rightElement.scrollHeight;
-                    setTimeout(()=>{
-                        window.location.href =`/shorts/<%=index%>/`
-                    },1200)
+                    setTimeout(() => {
+                        window.location.href = `/shorts/<%=index%>/`
+                        flag = 0;
+                    }, 1200)
+                    flag = 1;
                 }
+                console.log(flag)
             }
         })
 
-        function togglePlay(video){
-            video.paused? video.play() : video.pause()
+
+        function togglePlay(video) {
+            video.paused ? video.play() : video.pause()
         }
 
 
         function toggleLike(likeIcon, videoId) {
-            if ('<%=isLogged%>'=='false') return alert('Please sign in!!')
+            if ('<%=isLogged%>' == 'false') return alert('Please sign in!!')
             const dislikeIcon = document.querySelector('#dislike-video-btn')
             if (likeIcon.classList.contains('ri-thumb-up-line') && dislikeIcon.classList.contains('ri-thumb-down-fill')) {
                 dislikeIcon.classList.remove('ri-thumb-down-fill')
@@ -120,7 +155,7 @@ document.querySelector('.focused').classList.remove("focused","bg-zinc-300")
         }
 
         function toggleDislike(dislikeIcon, videoId) {
-            if ('<%=isLogged%>'=='false') return alert('Please sign in!!')
+            if ('<%=isLogged%>' == 'false') return alert('Please sign in!!')
             const likeIcon = document.querySelector('#like-video-btn')
             if (dislikeIcon.classList.contains('ri-thumb-down-line') && likeIcon.classList.contains('ri-thumb-up-fill')) {
                 likeIcon.classList.remove('ri-thumb-up-fill')

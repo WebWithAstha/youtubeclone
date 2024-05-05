@@ -382,7 +382,7 @@ router.get('/shorts', async function (req, res, next) {
     loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
     isLogged=true
   }
-  const shorts = await videoModel.find({ type: 'short' })
+  const shorts = await videoModel.find({ type: 'short' }).populate('user')
   const shortUrl = `https://${HOSTNAME}/${STORAGE_ZONE_NAME}/${shorts[0].videoName}?accessKey=${STREAM_KEY}`
   
   res.render('shorts.ejs', { leftSection: true, shorts, loggedUser, short: shorts[0], index: 1, shortUrl,isLogged });
@@ -394,7 +394,7 @@ router.get('/shorts/:index', async function (req, res, next) {
     loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
     isLogged=true
   }
-  const shorts = await videoModel.find({ type: 'short' })
+  const shorts = await videoModel.find({ type: 'short' }).populate('user')
   let index;
   if (shorts.length - 1 === Number(req.params.index)) {
     index = Number(req.params.index);
