@@ -106,14 +106,14 @@ router.get('/video/:videoid', async function (req, res, next) {
 });
 
 // finding all videos
-router.post('/video/all', async function (req, res, next) {
+router.post('/video/all', isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
   const videos = await videoModel.find({ user: loggedUser._id })
   res.status(200).json(videos)
 });
 
 // uploading video to cloud
-router.post('/video/upload', uploadVid.single('video'), async function (req, res, next) {
+router.post('/video/upload',isLoggedIn, uploadVid.single('video'), async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username });
   const response = await uploadFileToBunnyCDN(`./public/uploads/videos/${req.file.filename}`, req.file.filename)
   const newVideo = await videoModel.create({
@@ -129,7 +129,7 @@ router.post('/video/upload', uploadVid.single('video'), async function (req, res
 })
 
 // updating video details
-router.post('/video/details/:videoId', uploadImg.single('thumbnail'), async function (req, res, next) {
+router.post('/video/details/:videoId',isLoggedIn, uploadImg.single('thumbnail'), async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username });
   const video = await videoModel.findOneAndUpdate(
     { _id: req.params.videoId },
@@ -144,7 +144,7 @@ router.post('/video/details/:videoId', uploadImg.single('thumbnail'), async func
 })
 
 // deleting the video
-router.get('/video/delete/:videoId', async function (req, res, next) {
+router.get('/video/delete/:videoId', isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username });
   const video = await videoModel.findOneAndDelete({ _id: req.params.videoId })
   fs.readdir('./public/uploads', { withFileTypes: true }, (err, files) => {
@@ -155,7 +155,7 @@ router.get('/video/delete/:videoId', async function (req, res, next) {
 })
 
 // liking the video
-router.post('/video/like/:videoId', async function (req, res, next) {
+router.post('/video/like/:videoId', isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ _id: req.params.videoId })
   if (video.likes.indexOf(loggedUser._id) === -1) {
@@ -173,7 +173,7 @@ router.post('/video/like/:videoId', async function (req, res, next) {
   res.status(200).json(video.likes.length)
 })
 
-router.post('/video/dislike/:videoId', async function (req, res, next) {
+router.post('/video/dislike/:videoId',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ _id: req.params.videoId })
   if (video.dislikes.indexOf(loggedUser._id) === -1) {
@@ -191,7 +191,7 @@ router.post('/video/dislike/:videoId', async function (req, res, next) {
 })
 
 // adding to watchlater
-router.post('/video/watchlater/:videoId', async function (req, res, next) {
+router.post('/video/watchlater/:videoId',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ _id: req.params.videoId })
   if (loggedUser.watchLater.indexOf(video._id) === -1) {
@@ -204,7 +204,7 @@ router.post('/video/watchlater/:videoId', async function (req, res, next) {
 })
 
 // commenting video
-router.post('/video/comment/:videoId', async function (req, res, next) {
+router.post('/video/comment/:videoId',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const video = await videoModel.findOne({ _id: req.params.videoId })
   const comment = await new commentModel({
@@ -220,7 +220,7 @@ router.post('/video/comment/:videoId', async function (req, res, next) {
 // ---------- relpy comment routes ---------------------------
 
 // reply comment
-router.post('/reply/comment/:commentId', async function (req, res, next) {
+router.post('/reply/comment/:commentId',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   let comment = await commentModel.findOne({ _id: req.params.commentId })
   const reply = await commentModel.create({
@@ -244,7 +244,7 @@ router.post('/reply/comment/:commentId', async function (req, res, next) {
 })
 
 // showing comment's all replies
-router.post('/reply/showall', async function (req, res, next) {
+router.post('/reply/showall',isLoggedIn, async function (req, res, next) {
   const comment = await commentModel.findOne({ _id: req.body.commentId }).populate('replies')
   res.status(200).json(comment.replies)
 })
@@ -268,13 +268,13 @@ router.get('/history', async function (req, res, next) {
 });
 
 
-router.get('/watchlater', async function (req, res, next) {
+router.get('/watchlater',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
     .populate('watchLater')
     // .populate({path:'watchLater',populate:'video'})
   res.render('watchlater.ejs', { leftSection: true, loggedUser });
 });
-router.post('/history/remove/:videoId', async function (req, res, next) {
+router.post('/history/remove/:videoId',isLoggedIn, async function (req, res, next) {
   try {
     const loggedUser = await userModel.findOne({ username: req.session.passport.user.username });
     const videoToRemoveIndex = loggedUser.watchedVideo.findIndex(entry => entry.video.toString() === req.params.videoId);
@@ -290,7 +290,7 @@ router.post('/history/remove/:videoId', async function (req, res, next) {
     res.status(500).json('Internal server error.');
   }
 });
-router.post('/history/clearall', async function (req, res, next) {
+router.post('/history/clearall',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOneAndUpdate({ username: req.session.passport.user.username }, { $set: { watchedVideo: [] } })
   res.status(200).json('watch history cleared successfully.');
 });
@@ -299,14 +299,14 @@ router.post('/history/clearall', async function (req, res, next) {
 // ----------- playlist routes --------------------------------
 
 // rendering playlist page
-router.get('/playlist/:playlistId', async function (req, res, next) {
+router.get('/playlist/:playlistId',isLoggedIn, async function (req, res, next) {
   const playlist = await playlistModel.findOne({ _id: req.params.playlistId })
     .populate('user videos')
   res.render('playlist.ejs', { leftSection: true, loggedUser: req.user, playlist });
 });
 
 // creating playlist
-router.post('/playlist/create', async function (req, res, next) {
+router.post('/playlist/create',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.session.passport.user.username })
   const videoIds = req.body['video[]']
   const video = await videoModel.findOne({_id: videoIds[0]})
@@ -323,7 +323,7 @@ router.post('/playlist/create', async function (req, res, next) {
 });
 
 
-router.post('/showall/:type', async function (req, res, next) {
+router.post('/showall/:type',isLoggedIn, async function (req, res, next) {
   if (req.params.type === 'content') {
     const mergedAndSorted = await getLatestContent(req.body.userId)
     res.status(200).json(mergedAndSorted)
@@ -343,7 +343,7 @@ router.post('/showall/:type', async function (req, res, next) {
 // ----------- subscribe routes --------------------------------
 
 // subscribing channel
-router.post('/subscribe/user/:userId', async function (req, res, next) {
+router.post('/subscribe/user/:userId',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const user = await userModel.findOne({ _id: req.params.userId })
   if (user.subscribers.indexOf(loggedUser._id) === -1) {
@@ -416,7 +416,7 @@ router.get('/you', async function (req, res, next) {
 
   res.render('you.ejs', { leftSection: true, loggedUser });
 });
-router.get('/channel/:userId', async function (req, res, next) {
+router.get('/channel/:userId',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username })
   const user = await userModel.findOne({ _id: req.params.userId })
   const allUserContent = await getLatestContent(user._id)
@@ -424,7 +424,7 @@ router.get('/channel/:userId', async function (req, res, next) {
   res.render('profile.ejs', { leftSection: true, loggedUser, user, videos: allUserContentWithTime });
 });
 
-router.get('/studio', async function (req, res, next) {
+router.get('/studio',isLoggedIn, async function (req, res, next) {
   const loggedUser = await userModel.findOne({ username: req.user.username });
   const mergedAndSorted = await getLatestContent(loggedUser._id)
   res.render('studio.ejs', { leftSection: true, loggedUser, mergedAndSorted });
@@ -449,6 +449,16 @@ const uploadFileToBunnyCDN = (filePath, fileName) => {
   });
 };
 
+
+
+
+function isLoggedIn (req,res,nwxt){
+  if(req.isAuthenticated()){
+    next()
+  }else{
+    res.redirect('/login')
+  }
+}
 
 
 
